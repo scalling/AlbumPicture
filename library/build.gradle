@@ -10,7 +10,6 @@ android {
     //默认设置
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     buildToolsVersion rootProject.ext.android["buildToolsVersion"]
-    useLibrary 'org.apache.http.legacy'
 
 
     defaultConfig {
@@ -31,6 +30,13 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+
+}
+
+buildscript {
+    repositories {
+        jcenter()
     }
 }
 
