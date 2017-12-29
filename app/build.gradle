@@ -30,22 +30,32 @@ android {
 }
 
 dependencies {
-   // support
-        api(rootProject.ext.dependencies["support-v4"]) {
-            exclude module: 'support-annotations'
-        }
-        api(rootProject.ext.dependencies["appcompat-v7"]) {
-            exclude module: 'support-annotations'
-            exclude module: 'support-v4'
-        }
-        api(rootProject.ext.dependencies["design"]) {
-            exclude module: 'support-annotations'
-            exclude module: 'appcompat-v7'
-            exclude module: 'support-v4'
-        }
-        api rootProject.ext.dependencies["annotations"]
-
+    // support
+    api(rootProject.ext.dependencies["support-v4"]) {
+        exclude module: 'support-annotations'
+    }
+    api(rootProject.ext.dependencies["appcompat-v7"]) {
+        exclude module: 'support-annotations'
+        exclude module: 'support-v4'
+    }
+    api(rootProject.ext.dependencies["design"]) {
+        exclude module: 'support-annotations'
+        exclude module: 'appcompat-v7'
+        exclude module: 'support-v4'
+    }
+    api rootProject.ext.dependencies["annotations"]
+    
+    api(rootProject.ext.dependencies["butterknife"]) {
+        exclude module: 'support-annotations'
+    }
+    annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
+        exclude module: 'support-annotations'
+    }
+    //图片详情展示
+    compile 'com.commit451:PhotoView:1.2.4'
+    compile 'com.zm.tool.library:tool_library:1.0.1'
     //test
     implementation rootProject.ext.dependencies["logger"]
     testImplementation rootProject.ext.dependencies["junit"]
+    implementation project(':library')
 }

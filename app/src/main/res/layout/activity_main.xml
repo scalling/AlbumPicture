@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center">
+    <com.zm.tool.library.widget.RoundedImageView
+        android:id="@+id/iv_head"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+    <Button android:id="@+id/tv_tack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="点击拍照" />
 
+    <Button android:id="@+id/btn_m"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="图片多选" />
 </LinearLayout>

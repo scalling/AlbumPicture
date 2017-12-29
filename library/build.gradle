@@ -54,7 +54,10 @@ dependencies {
         exclude module: 'support-v4'
     }
     api rootProject.ext.dependencies["annotations"]
-
+    //rx
+    implementation rootProject.ext.dependencies["rxandroid"]
+    implementation rootProject.ext.dependencies["rxjava"]
+    implementation rootProject.ext.dependencies["rxpermissions2"]
     //test
     implementation rootProject.ext.dependencies["logger"]
     testImplementation rootProject.ext.dependencies["junit"]

@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zm.picture.sample">
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /><!--写存储卡-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /><!--读存储卡-->
+    <uses-permission android:name="android.permission.CAMERA" /><!--打开摄像头-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -8,11 +10,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppBaseTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".mvp.ui.activity.ImagePreviewActivity"
+            android:theme="@style/AppBaseTheme"/>
+        <activity android:name=".mvp.ui.activity.ImageSelectorActivity"
+            android:theme="@style/AppBaseTheme"/>
     </application>
 </manifest>
