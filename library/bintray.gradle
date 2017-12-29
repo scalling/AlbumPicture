@@ -7,7 +7,7 @@ publish {
     groupId = 'com.zm.picture.lib'
     artifactId = 'album_picture'
     publishVersion = rootProject.ext.android["versionName"]
-    desc = 'Take pictures, select local pictures, crop'
+    desc = 'Take pictures, select local pictures, crop reconstruction'
     website = siteUrl
 }
 tasks.withType(Javadoc) {//防止编码问题

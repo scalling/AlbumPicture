@@ -1,17 +1,23 @@
 ##介绍
->拍照、裁剪、获取本地图片 (适配7.0)
+>拍照、裁剪、获取本地图片重构 (适配7.0)
+正在开发
 
 ## 引入
 
 * Gradle 
    
    ```
-
+    compile 'com.zm.picture.lib:album_picture:1.0.0'
    ```
 * Maven
 	
 	```
-
+    <dependency>
+      <groupId>com.zm.picture.lib</groupId>
+      <artifactId>album_picture</artifactId>
+      <version>1.0.0</version>
+      <type>pom</type>
+    </dependency>
 	
 	```
 
@@ -33,8 +39,8 @@
      
 >如果你的项目中启用了代码混淆，可在混淆规则文件(如：proguard-rules.pro)中添加如下代码：
      
- -keep class com.zm.picture.lib.** { *; }
- -dontwarn com.zm.picture.lib.**
+    -keep class com.zm.picture.lib.** { *; }
+    -dontwarn com.zm.picture.lib.**
      
         
 ## 具体用法请查看DEMO
