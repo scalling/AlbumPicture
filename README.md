@@ -33,9 +33,10 @@
      
 >如果你的项目中启用了代码混淆，可在混淆规则文件(如：proguard-rules.pro)中添加如下代码：
      
-
+ -keep class com.zm.picture.lib.** { *; }
+ -dontwarn com.zm.picture.lib.**
      
         
 ## 具体用法请查看DEMO
->[MainActivity]()
+>[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/app/src/main/java/com/zm/picture/sample/MainActivity.java)
         
