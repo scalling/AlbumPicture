@@ -1,0 +1,45 @@
+ext {
+
+    android = [
+            compileSdkVersion       : 27,
+            buildToolsVersion       : "27.0.2",
+            minSdkVersion           : 15,
+            targetSdkVersion        : 27,
+            versionCode             : 1,
+            versionName             : "1.0.0"
+    ]
+
+    version = [
+            androidSupportSdkVersion: "27.0.2",
+            dagger2SdkVersion       : "2.13",
+            butterknifeSdkVersion   : "8.8.1",
+            canarySdkVersion        : "1.5.4",
+            rxJava                  : "2.0.1"
+    ]
+    dependencies = [
+            //support
+            "appcompat-v7"             : "com.android.support:appcompat-v7:${version["androidSupportSdkVersion"]}",
+            "design"                   : "com.android.support:design:${version["androidSupportSdkVersion"]}",
+            "support-v4"               : "com.android.support:support-v4:${version["androidSupportSdkVersion"]}",
+            "annotations"              : "com.android.support:support-annotations:${version["androidSupportSdkVersion"]}",
+            //view
+            "butterknife-compiler"     : "com.jakewharton:butterknife-compiler:${version["butterknifeSdkVersion"]}",//view注解
+
+            "rxandroid":"io.reactivex.rxjava2:rxandroid:${version["rxJava"]}",
+            "rxjava":"io.reactivex.rxjava2:rxjava:${version["rxJava"]}",
+            "rxpermissions2":"com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar",//权限管理
+            //tools
+            "dagger2-compiler"         : "com.google.dagger:dagger-compiler:${version["dagger2SdkVersion"]}",
+            //test
+            "canary-debug"             : "com.squareup.leakcanary:leakcanary-android:${version["canarySdkVersion"]}",
+            "canary-release"           : "com.squareup.leakcanary:leakcanary-android-no-op:${version["canarySdkVersion"]}",
+            "junit"                    : "junit:junit:4.12",
+            "logger"                   : "com.orhanobut:logger:2.1.1"
+
+
+
+
+    ]
+
+
+}
