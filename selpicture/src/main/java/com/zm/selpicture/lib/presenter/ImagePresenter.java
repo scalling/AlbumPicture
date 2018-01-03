@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import com.zm.picture.lib.TakePhoto;
 import com.zm.picture.lib.entity.CropOptions;
@@ -21,7 +22,9 @@ import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.ImageParam;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.entity.PreviewResult;
+import com.zm.selpicture.lib.ui.adapter.ImageFolderAdapter;
 import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
+import com.zm.selpicture.lib.ui.popup.FolderPopup;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     private FragmentActivity context;
     private ImageParam param;
     private TakePhoto takePhoto;
-
+    private FolderPopup folderWindow;
     @Override
     public void loadData(FragmentActivity context) {
         if (imageAdapter == null) {
@@ -114,13 +117,6 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             selectImages.add(image);
         }
         checkSel();
-        imageAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void selectFolderImages(String name, List<LocalMedia> images) {
-        getMvpView().setFolderName(name);
-        imageAdapter.setDataList(images);
         imageAdapter.notifyDataSetChanged();
     }
 
@@ -225,12 +221,15 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
                 public void takeFail(TResult result, String msg) {
                     if (!param.isMultiple())
                         selectImages.clear();
+                    getMvpView().takeFail(result,msg);
                 }
 
                 @Override
                 public void takeCancel() {
                     if (!param.isMultiple())
                         selectImages.clear();
+
+                    getMvpView().takeCancel();
                 }
 
                 @Override
@@ -239,6 +238,35 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
                 }
             });
             takePhoto.onEnableCompress(null, false);
+        }
+    }
+
+
+    private FolderPopup getFolderPopup() {
+        if (folderWindow == null) {
+            folderWindow = getMvpView().getFolderPopup();
+            folderWindow.setOnItemClickListener(new ImageFolderAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(String name, List<LocalMedia> images) {
+                    folderWindow.dismiss();
+                    getMvpView().setFolderName(name);
+                    imageAdapter.setDataList(images);
+                    imageAdapter.notifyDataSetChanged();
+
+                }
+            });
+        }
+        return folderWindow;
+    }
+    //显示选择框
+
+
+    @Override
+    public void showFolderPopup(View view) {
+        if (getFolderPopup().isShowing()) {
+            getFolderPopup().dismiss();
+        } else {
+            getFolderPopup().showAsDropDown(view);
         }
     }
 
@@ -253,4 +281,5 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         intent.putExtra(PARAM, param);
         return intent;
     }
+
 }

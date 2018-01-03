@@ -226,12 +226,14 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
                 public void takeFail(TResult result, String msg) {
                     if (!param.isMultiple())
                         selectImages.clear();
+                    getMvpView().takeFail(result,msg);
                 }
 
                 @Override
                 public void takeCancel() {
                     if (!param.isMultiple())
                         selectImages.clear();
+                    getMvpView().takeCancel();
                 }
 
                 @Override

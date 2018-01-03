@@ -56,8 +56,6 @@ public interface ImageContract {
 
         void onDoneClick();//完成选择
 
-        void checkBoxClick(boolean isChecked, LocalMedia image);//图片多选
-
         void selectFolderImages(String name, List<LocalMedia> images); //设置数据
 
         void startSelPreview();//预览

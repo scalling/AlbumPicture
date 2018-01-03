@@ -17,14 +17,12 @@ import android.widget.Toast;
 
 import com.zm.picture.lib.TakePhoto;
 import com.zm.picture.lib.TakePhotoImpl;
-import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.picture.lib.entity.LocalMediaFolder;
 import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.presenter.ImagePresenter;
 import com.zm.selpicture.lib.presenter.PreviewPresenter;
-import com.zm.selpicture.lib.ui.adapter.ImageFolderAdapter;
 import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 import com.zm.selpicture.lib.ui.popup.FolderPopup;
 import com.zm.selpicture.lib.ui.widget.GridSpacingItemDecoration;
@@ -55,8 +53,8 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     TextView tvTitle;
     @BindView(R.id.rl_title)
     RelativeLayout rlTitle;
-    private FolderPopup folderWindow;
     private ImagePresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,15 +64,18 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
         mPresenter.attachView(this);
         initView();
     }
+
     @Override
     protected void onDestroy() {
         mPresenter.detachView();
         super.onDestroy();
     }
-    private void initView(){
+
+    private void initView() {
         tvTitle.setText(getString(R.string.picture));
         mPresenter.loadData(this);
     }
+
     @Override
     public void bindAdapter(ImageListAdapter adapter) {
         recyclerView.setHasFixedSize(true);
@@ -94,7 +95,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
         if (id == R.id.btnBack) {
             finish();
         } else if (id == R.id.folder_layout) {
-            showFolder();
+            mPresenter.showFolderPopup(rlTitle);
         } else if (id == R.id.tvRests) {
             mPresenter.onDoneClick();
         } else if (id == R.id.preview_text) {
@@ -117,30 +118,15 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     public void onFinish() {
         finish();
     }
-    public void showFolder() {
-        if (getFolderPopup().isShowing()) {
-            getFolderPopup().dismiss();
-        } else {
-            getFolderPopup().showAsDropDown(rlTitle);
-        }
-    }
-    private FolderPopup getFolderPopup() {
-        if (folderWindow == null) {
-            folderWindow = new FolderPopup(this);
-            folderWindow.setOnItemClickListener(new ImageFolderAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(String name, List<LocalMedia> images) {
-                    folderWindow.dismiss();
-                    mPresenter.selectFolderImages(name, images);
 
-                }
-            });
-        }
-        return folderWindow;
+    @Override
+    public FolderPopup getFolderPopup() {
+        return new FolderPopup(this);
     }
+
     @Override
     public void onMaxError(int maxSize) {
-        Toast.makeText(this, getString(R.string.message_max_num, maxSize + ""),Toast.LENGTH_SHORT);
+        Toast.makeText(this, getString(R.string.message_max_num, maxSize + ""), Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -155,7 +141,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
 
     @Override
     public void setTvRestText(int size, int maxSelectNum) {
-        if(size<=0)
+        if (size <= 0)
             tvRests.setText(getString(R.string.done));
         else
             tvRests.setText(getString(R.string.done_num, size + "", maxSelectNum + ""));
@@ -163,7 +149,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
 
     @Override
     public void setPreviewText(int size) {
-        if(size<=0)
+        if (size <= 0)
             previewText.setText(getString(R.string.preview));
         else
             previewText.setText(getString(R.string.preview_num, size + ""));
@@ -171,21 +157,23 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
 
     @Override
     public void setPrevieParam(PreviewParam previeParam) {
-        PreviewPresenter.open(this,ImagePreviewActivity.class,previeParam,0);
+        PreviewPresenter.open(this, ImagePreviewActivity.class, previeParam, 0);
     }
+
     @Override
     public TakePhoto getTakePhoto(TakePhoto.TakeResultListener listener) {
-        return new TakePhotoImpl(this,listener);
+        return new TakePhotoImpl(this, listener);
     }
 
     @Override
     public void takeFail(TResult result, String msg) {
+        Toast.makeText(this, "裁剪失败", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void takeCancel() {
-
+        Toast.makeText(this, "裁剪取消", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.zm.selpicture.lib.contract;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import com.zm.picture.lib.TakePhoto;
 import com.zm.picture.lib.entity.LocalMedia;
@@ -9,6 +10,7 @@ import com.zm.picture.lib.entity.LocalMediaFolder;
 import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
+import com.zm.selpicture.lib.ui.popup.FolderPopup;
 
 import java.util.List;
 
@@ -41,12 +43,13 @@ public interface ImageContract {
 
         void setPrevieParam(PreviewParam previeParam);//activity跳转
 
-        TakePhoto getTakePhoto(TakePhoto.TakeResultListener listener);//获取拍照
+        TakePhoto getTakePhoto(TakePhoto.TakeResultListener listener);//初始化拍照
 
         void takeFail(TResult result, String msg);//裁剪失败
 
         void takeCancel();//裁剪取消
 
+        FolderPopup getFolderPopup();//初始化弹框
     }
 
     interface IPresenter {
@@ -54,14 +57,10 @@ public interface ImageContract {
 
         void onDoneClick();//完成选择
 
-        void checkBoxClick(boolean isChecked, LocalMedia image);//图片多选
-
-        boolean isSelected(LocalMedia image);//当前图片是否已经被选中
-
-        void selectFolderImages(String name, List<LocalMedia> images); //设置数据
-
         void startSelPreview();//预览
 
-        void onActivityResult(int requestCode, int resultCode, Intent data);//回掉
+        void onActivityResult(int requestCode, int resultCode, Intent data);//回调
+
+        void showFolderPopup(View view);//显示弹框
     }
 }
