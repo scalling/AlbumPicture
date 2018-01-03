@@ -15,8 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.zm.picture.lib.TakePhoto;
+import com.zm.picture.lib.TakePhotoImpl;
 import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.picture.lib.entity.LocalMediaFolder;
+import com.zm.picture.lib.entity.TResult;
 import com.zm.picture.sample.R;
 import com.zm.picture.sample.base.BaseMVPAppCompatActivity;
 import com.zm.picture.sample.mvp.contract.ImageContract;
@@ -179,5 +182,19 @@ public class ImageSelectorActivity extends BaseMVPAppCompatActivity<ImageContrac
     public void setSelEnable(boolean enable) {
         tvRests.setEnabled(enable);
         previewText.setEnabled(enable);
+    }
+    @Override
+    public TakePhoto getTakePhoto(TakePhoto.TakeResultListener listener) {
+        return new TakePhotoImpl(this,listener);
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
     }
 }

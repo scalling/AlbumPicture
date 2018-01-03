@@ -15,8 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zm.picture.lib.TakePhoto;
+import com.zm.picture.lib.TakePhotoImpl;
 import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.picture.lib.entity.LocalMediaFolder;
+import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.presenter.ImagePresenter;
@@ -135,7 +138,6 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
         }
         return folderWindow;
     }
-
     @Override
     public void onMaxError(int maxSize) {
         Toast.makeText(this, getString(R.string.message_max_num, maxSize + ""),Toast.LENGTH_SHORT);
@@ -170,6 +172,20 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     @Override
     public void setPrevieParam(PreviewParam previeParam) {
         PreviewPresenter.open(this,ImagePreviewActivity.class,previeParam,0);
+    }
+    @Override
+    public TakePhoto getTakePhoto(TakePhoto.TakeResultListener listener) {
+        return new TakePhotoImpl(this,listener);
+    }
+
+    @Override
+    public void takeFail(TResult result, String msg) {
+
+    }
+
+    @Override
+    public void takeCancel() {
+
     }
 
     @Override

@@ -40,11 +40,7 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
         selectImages = previewParam.getSelectImages();
         int position = previewParam.getPosition();
         getMvpView().setTvTitle((position + 1) + "/" + images.size());
-        if (isOri) {
-            getMvpView().isOri(true);
-        } else {
-            getMvpView().isOri(false);
-        }
+        getMvpView().isOri(isOri);
         onImageSwitch(position);
         getMvpView().setDoneText(selectImages.size(), maxSelectNum);
         getMvpView().setAdapter(new ImagePreviewPagerAdapter(context.getSupportFragmentManager(), images), position);

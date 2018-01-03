@@ -3,8 +3,10 @@ package com.zm.selpicture.lib.contract;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
+import com.zm.picture.lib.TakePhoto;
 import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.picture.lib.entity.LocalMediaFolder;
+import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 
@@ -38,6 +40,13 @@ public interface ImageContract {
         void setPreviewText(int size);//当前图片文件夹图片个数
 
         void setPrevieParam(PreviewParam previeParam);//activity跳转
+
+        TakePhoto getTakePhoto(TakePhoto.TakeResultListener listener);//获取拍照
+
+        void takeFail(TResult result, String msg);//裁剪失败
+
+        void takeCancel();//裁剪取消
+
     }
 
     interface IPresenter {
@@ -52,8 +61,6 @@ public interface ImageContract {
         void selectFolderImages(String name, List<LocalMedia> images); //设置数据
 
         void startSelPreview();//预览
-
-        void onItemClick(List<LocalMedia> images, LocalMedia media, int position, boolean isChecked); //每项的点击
 
         void onActivityResult(int requestCode, int resultCode, Intent data);//回掉
     }

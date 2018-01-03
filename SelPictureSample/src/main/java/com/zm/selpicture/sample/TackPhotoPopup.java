@@ -1,4 +1,4 @@
-package com.zm.selpicture.lib.ui.popup;
+package com.zm.selpicture.sample;
 
 import android.app.Activity;
 import android.content.Intent;

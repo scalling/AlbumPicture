@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.zm.picture.lib.util.TConstant;
 import com.zm.selpicture.lib.entity.ImageParam;
 import com.zm.selpicture.lib.presenter.ImagePresenter;
-import com.zm.selpicture.lib.ui.popup.TackPhotoPopup;
 
 import java.util.ArrayList;
 
@@ -48,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_m)
     void btnM() {
         isM = true;
-        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(9, true), TConstant.RC_PICK_MULTIPLE);
+        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(9, true,true), TConstant.RC_PICK_MULTIPLE);
     }
 
     @Override

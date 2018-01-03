@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 
-
 import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.picture.sample.base.BaseMvpPresenter;
 import com.zm.picture.sample.mvp.contract.PreviewContract;
-import com.zm.picture.sample.mvp.model.PreviewModel;
 import com.zm.picture.sample.mvp.model.entity.PreviewParam;
 import com.zm.picture.sample.mvp.model.entity.PreviewResult;
 import com.zm.picture.sample.mvp.ui.adapter.ImagePreviewPagerAdapter;
@@ -25,7 +23,6 @@ import java.util.List;
  */
 
 public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> implements PreviewContract.IPresenter {
-
     private int maxSelectNum;
     private List<LocalMedia> images = new ArrayList<>();
     private List<LocalMedia> selectImages = new ArrayList<>();
@@ -43,11 +40,7 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
         selectImages = previewParam.getSelectImages();
         int position = previewParam.getPosition();
         getMvpView().setTvTitle((position + 1) + "/" + images.size());
-        if (isOri) {
-            getMvpView().isOri(true);
-        } else {
-            getMvpView().isOri(false);
-        }
+        getMvpView().isOri(isOri);
         onImageSwitch(position);
         getMvpView().setDoneText(selectImages.size(), maxSelectNum);
         getMvpView().setAdapter(new ImagePreviewPagerAdapter(context.getSupportFragmentManager(), images), position);

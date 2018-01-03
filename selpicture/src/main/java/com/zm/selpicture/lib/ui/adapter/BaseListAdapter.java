@@ -21,7 +21,7 @@ import java.util.List;
  */
 public abstract class BaseListAdapter<T> extends RecyclerView.Adapter<BaseRecyclerHolder> {
     protected Context mContext;
-    private LayoutInflater mInflater;
+    protected LayoutInflater mInflater;
 
     protected List<T> mDataList = new ArrayList<>();
 

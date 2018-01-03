@@ -16,5 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ImagePreviewActivity"
+            android:theme="@style/AppBaseTheme"/>
+        <activity android:name=".ImageSelectorActivity"
+            android:theme="@style/AppBaseTheme"/>
     </application>
 </manifest>

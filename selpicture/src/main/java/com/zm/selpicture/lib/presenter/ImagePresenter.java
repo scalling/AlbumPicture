@@ -3,18 +3,27 @@ package com.zm.selpicture.lib.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 
+import com.zm.picture.lib.TakePhoto;
+import com.zm.picture.lib.entity.CropOptions;
 import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.picture.lib.entity.LocalMediaFolder;
+import com.zm.picture.lib.entity.TContextWrap;
+import com.zm.picture.lib.entity.TImage;
+import com.zm.picture.lib.entity.TResult;
 import com.zm.picture.lib.util.LocalMediaLoader;
 import com.zm.picture.lib.util.TConstant;
+import com.zm.picture.lib.util.TFileUtils;
+import com.zm.selpicture.lib.R;
 import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.ImageParam;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.entity.PreviewResult;
 import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,38 +34,38 @@ import java.util.List;
 public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implements ImageContract.IPresenter, ImageListAdapter.ImageListInterface {
     public final static String PARAM = "param";//请求的参数
     public final static String RESULT = "result";//请求的参数
-    private int maxSelectNum = 0;//默认最多选择9张
-    private boolean isMultiple = false;//是否多选
-    private boolean enablePreview = false;//详情是否可用
     private boolean isOri = false;//是否压缩
     private List<LocalMedia> selectImages = new ArrayList<LocalMedia>();
     private ImageListAdapter imageAdapter;
     private FragmentActivity context;
-
+    private ImageParam param;
+    private TakePhoto takePhoto;
 
     @Override
     public void loadData(FragmentActivity context) {
         if (imageAdapter == null) {
             this.context = context;
-            ImageParam param = (ImageParam) context.getIntent().getSerializableExtra(PARAM);
-            maxSelectNum = param.getMaxSelectNum();
-            enablePreview = param.isEnablePreview();
-            if (maxSelectNum > 1)
-                isMultiple = true;
-            if (!isMultiple) {
-                enablePreview = false;
-            }
-            getMvpView().setRestVisibility(isMultiple ? true : false);
-            getMvpView().setPreviewVisibility(enablePreview ? true : false);
-            imageAdapter = new ImageListAdapter(context, this);
+            param = (ImageParam) context.getIntent().getSerializableExtra(PARAM);
+            initPhoto();
+            getMvpView().setRestVisibility(param.isMultiple() ? true : false);
+            getMvpView().setPreviewVisibility(param.isEnablePreview() ? true : false);
+            imageAdapter = new ImageListAdapter(context, this, param.isMultiple(), param.isShowCamera());
             getMvpView().bindAdapter(imageAdapter);
         }
         new LocalMediaLoader(context, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoader.LocalMediaLoadListener() {
             @Override
             public void loadComplete(List<LocalMediaFolder> folders) {
                 getMvpView().bindFolder(folders);
-                getMvpView().setFolderName(folders.get(0).getName());
-                imageAdapter.setDataList(folders.get(0).getImages());
+                if (folders.size() > 0) {
+                    imageAdapter.addAll(folders.get(0).getImages());
+                    getMvpView().setFolderName(folders.get(0).getName());
+                } else {
+                    imageAdapter.addAll(new ArrayList<LocalMedia>());
+                    getMvpView().setFolderName(context.getString(R.string.all_image));
+                }
+                if (param.isShowCamera()) {
+                    imageAdapter.getDataList().add(0, new LocalMedia(""));
+                }
                 imageAdapter.notifyDataSetChanged();
             }
         });
@@ -70,11 +79,6 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean isMultiple() {
-        return isMultiple;
     }
 
     @Override
@@ -92,11 +96,11 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     @Override
     public void checkBoxClick(boolean isChecked, LocalMedia image) {
 
-        if (!isMultiple) {
+        if (!param.isMultiple()) {
             return;
         }
-        if (selectImages.size() >= maxSelectNum && !isChecked) {
-            getMvpView().onMaxError(maxSelectNum);
+        if (selectImages.size() >= param.getMaxSelectNum() && !isChecked) {
+            getMvpView().onMaxError(param.getMaxSelectNum());
             return;
         }
         if (isChecked) {
@@ -122,30 +126,63 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
 
     @Override
     public void startSelPreview() {
-        getMvpView().setPrevieParam(new PreviewParam(maxSelectNum, isOri, 0, selectImages, selectImages));
+        getMvpView().setPrevieParam(new PreviewParam(param.getMaxSelectNum(), isOri, 0, selectImages, selectImages));
     }
 
     @Override
-    public void onItemClick(List<LocalMedia> images, LocalMedia media, int position, boolean isChecked) {
-        if (!isMultiple || enablePreview) {
-            if (enablePreview) {
-                getMvpView().setPrevieParam(new PreviewParam(maxSelectNum, isOri, position, images, selectImages));
-            } else {
-                if (media != null) {
-                    selectImages.add(media);
-                    onDoneClick();
-                }
-            }
+    public void onItemClick(List<LocalMedia> images, LocalMedia media, int position, int viewType) {
+
+        if (viewType == ImageListAdapter.TYPE_CAMERA) {
+            clickCamera();
         } else {
-            checkBoxClick(isChecked, media);
+            boolean isChecked = isSelected(media);
+            if (param.isEnablePreview()) {
+                List<LocalMedia> newImages = new ArrayList<>();
+                newImages.addAll(images);
+                int newPosition = position;
+                if (param.isShowCamera()) {
+                    newPosition -= 1;
+                    newImages.remove(0);
+                }
+                getMvpView().setPrevieParam(new PreviewParam(param.getMaxSelectNum(), isOri, newPosition, newImages, selectImages));
+                return;
+            }
+            if (param.isMultiple()) {
+                checkBoxClick(isChecked, media);
+                return;
+            }
+            if (media != null) {
+                selectImages.add(media);
+                onDoneClick();
+            }
         }
+    }
+
+    public void clickCamera() {
+        File file = TFileUtils.createCameraFile(context);
+        Uri fileUri = Uri.fromFile(file);
+        if (param.isEnableCrap()) {
+            takePhoto.onPickFromCaptureWithCrop(fileUri, getCropOptions());
+        } else {
+            takePhoto.onPickFromCapture(fileUri);
+        }
+    }
+
+    private CropOptions getCropOptions() {
+        return new CropOptions.Builder()
+                .setAspectX(param.getOutx())
+                .setAspectY(param.getOuty())
+                .setOutputX(param.getOutx())
+                .setOutputY(param.getOuty())
+                .setWithOwnCrop(false)
+                .create();
     }
 
     private void checkSel() {
         boolean enable = selectImages.size() != 0;
         getMvpView().setSelEnable(enable);
         getMvpView().setPreviewText(selectImages.size());
-        getMvpView().setTvRestText(selectImages.size(), maxSelectNum);
+        getMvpView().setTvRestText(selectImages.size(), param.getMaxSelectNum());
         imageAdapter.notifyDataSetChanged();
     }
 
@@ -163,6 +200,45 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             } else {
                 checkSel();
             }
+        }
+    }
+
+    //初始化拍照
+    private void initPhoto() {
+        if (param.isShowCamera()) {
+            takePhoto = getMvpView().getTakePhoto(new TakePhoto.TakeResultListener() {
+                @Override
+                public void takeSuccess(TResult result) {
+                    String url = result.getImage().getOriginalPath();
+                    //(String.format("得到的图片地址：%s %s %s %s", result.getImages().size(), url, result.getImage().getOriginalPath(), result.getImage().getFromType()));
+                    ArrayList<String> images = new ArrayList<>();
+                    for (TImage dto : result.getImages()) {
+                        images.add(dto.getOriginalPath());
+                    }
+                    Intent intent = new Intent();
+                    intent.putExtra(TConstant.REQUEST_OUTPUT, images);
+                    context.setResult(Activity.RESULT_OK, intent);
+                    getMvpView().onFinish();
+                }
+
+                @Override
+                public void takeFail(TResult result, String msg) {
+                    if (!param.isMultiple())
+                        selectImages.clear();
+                }
+
+                @Override
+                public void takeCancel() {
+                    if (!param.isMultiple())
+                        selectImages.clear();
+                }
+
+                @Override
+                public Intent getPickMultipleIntent(TContextWrap contextWrap, int limit) {
+                    return null;
+                }
+            });
+            takePhoto.onEnableCompress(null, false);
         }
     }
 
