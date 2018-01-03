@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.zm.picture.lib.util.TConstant;
+import com.zm.picture.sample.mvp.model.entity.ImageParam;
+import com.zm.picture.sample.mvp.presenter.ImagePresenter;
 import com.zm.picture.sample.mvp.ui.activity.ImageSelectorActivity;
 import com.zm.picture.sample.mvp.ui.popup.TackPhotoPopup;
 import com.zm.tool.library.util.ToastUtils;
@@ -48,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_m)
     void btnM(){
         isM = true;
-        Intent intent = new Intent(this, ImageSelectorActivity.class);
-        intent.putExtra(TConstant.IMAGE_MAX, 9);
-        intent.putExtra(TConstant.IMAGE_ENABLE_PREVIEW,true);
-        startActivityForResult(intent, com.zm.picture.lib.util.TConstant.RC_PICK_MULTIPLE);
+        ImagePresenter.open(this,ImageSelectorActivity.class,new ImageParam(9,true), TConstant.RC_PICK_MULTIPLE);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
             tackPhotoPopup.onActivityResult(requestCode, resultCode, data);
         }else{
            if(requestCode==com.zm.picture.lib.util.TConstant.RC_PICK_MULTIPLE&&resultCode == Activity.RESULT_OK && data != null){
-               ArrayList<String> images = (ArrayList<String>) data.getSerializableExtra(com.zm.picture.lib.util.TConstant.REQUEST_OUTPUT);
+               ArrayList<String> images = (ArrayList<String>) data.getSerializableExtra(TConstant.REQUEST_OUTPUT);
                ToastUtils.showToast(MainActivity.this,images.toString());
            }
 

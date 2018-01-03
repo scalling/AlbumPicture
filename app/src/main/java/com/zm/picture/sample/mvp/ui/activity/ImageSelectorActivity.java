@@ -20,7 +20,9 @@ import com.zm.picture.lib.entity.LocalMediaFolder;
 import com.zm.picture.sample.R;
 import com.zm.picture.sample.base.BaseMVPAppCompatActivity;
 import com.zm.picture.sample.mvp.contract.ImageContract;
+import com.zm.picture.sample.mvp.model.entity.PreviewParam;
 import com.zm.picture.sample.mvp.presenter.ImagePresenter;
+import com.zm.picture.sample.mvp.presenter.PreviewPresenter;
 import com.zm.picture.sample.mvp.ui.adapter.ImageFolderAdapter;
 import com.zm.picture.sample.mvp.ui.adapter.ImageListAdapter;
 import com.zm.picture.sample.mvp.ui.popup.FolderPopup;
@@ -61,8 +63,7 @@ public class ImageSelectorActivity extends BaseMVPAppCompatActivity<ImageContrac
         setContentView(R.layout.image_selector_activity);
         ButterKnife.bind(this);
         tvTitle.setText(getString(R.string.picture));
-        getPresenter().onCreate();
-        getPresenter().getFolders(this);
+        getPresenter().loadData(this);
     }
     @Override
     public void bindAdapter(ImageListAdapter adapter) {
@@ -92,7 +93,7 @@ public class ImageSelectorActivity extends BaseMVPAppCompatActivity<ImageContrac
     }
 
     @Override
-    public void setFolders(List<LocalMediaFolder> folders) {
+    public void bindFolder(List<LocalMediaFolder> folders) {
         getFolderPopup().bindFolder(folders);
     }
 
@@ -101,11 +102,6 @@ public class ImageSelectorActivity extends BaseMVPAppCompatActivity<ImageContrac
         folderName.setText(name);
     }
 
-    @Override
-    public void startPreview(Intent intent, int requestCode) {
-        intent.setClass(this, ImagePreviewActivity.class);
-        startActivityForResult(intent, requestCode);
-    }
 
     @Override
     public void onFinish() {
@@ -125,7 +121,6 @@ public class ImageSelectorActivity extends BaseMVPAppCompatActivity<ImageContrac
             getFolderPopup().showAsDropDown(rlTitle);
         }
     }
-
     private FolderPopup getFolderPopup() {
         if (folderWindow == null) {
             folderWindow = new FolderPopup(this);
@@ -157,44 +152,32 @@ public class ImageSelectorActivity extends BaseMVPAppCompatActivity<ImageContrac
     }
 
     @Override
-    public void setTvRestText(String text) {
-        tvRests.setText(text);
+    public void setTvRestText(int size, int maxSelectNum) {
+        if(size<=0)
+            tvRests.setText(getString(R.string.done));
+        else
+            tvRests.setText(getString(R.string.done_num, size + "", maxSelectNum + ""));
     }
 
     @Override
-    public void setPreviewText(String text) {
-        previewText.setText(text);
+    public void setPreviewText(int size) {
+        if(size<=0)
+            previewText.setText(getString(R.string.preview));
+        else
+            previewText.setText(getString(R.string.preview_num, size + ""));
+
     }
+
+    @Override
+    public void setPrevieParam(PreviewParam previeParam) {
+        PreviewPresenter.open(this,ImagePreviewActivity.class,previeParam,0);
+    }
+
+
 
     @Override
     public void setSelEnable(boolean enable) {
         tvRests.setEnabled(enable);
         previewText.setEnabled(enable);
-    }
-
-    @Override
-    public String getTvRestNull() {
-        return getString(R.string.done);
-    }
-
-    @Override
-    public String getPreviewTextNull() {
-        return getString(R.string.preview);
-    }
-
-    @Override
-    public String getTvRestData(int size, int maxSelectNum) {
-        return getString(R.string.done_num, size + "", maxSelectNum + "");
-    }
-
-    @Override
-    public String getPreviewTextData(int size) {
-        return getString(R.string.preview_num, size + "");
-    }
-
-    @Override
-    public AppCompatActivity getActivity() {
-
-        return this;
     }
 }

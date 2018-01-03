@@ -1,5 +1,7 @@
 package com.zm.picture.sample.mvp.contract;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.zm.picture.sample.base.BaseContract;
@@ -19,7 +21,7 @@ public interface PreviewContract {
         //是否是原图
         void isOri(boolean checked);
         //原图大小
-        void setOriText(String str);
+        void setOriText(String size);
         //是否选中
         void setSelect(boolean checked);
         //最大选中错误
@@ -32,13 +34,10 @@ public interface PreviewContract {
         void showStatusBar();
         //关闭当前界面
         void onFinish();
-        //获取原图大小文案
-        String getOriSizeText(String size);
-        AppCompatActivity getActivity();
     }
      interface IPresenter {
         //初始化数据
-        void onCreate();
+        void onCreate(FragmentActivity context);
         //数据选中该拜年
         void onPageSelected(int position);
         //设置是否是原图
@@ -51,6 +50,5 @@ public interface PreviewContract {
         void onDoneClick(boolean isDone);
     }
      interface IModel extends BaseContract.IBaseModel {
-        String getFileSize(long size);
     }
 }

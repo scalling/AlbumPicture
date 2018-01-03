@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TakephotoSample</string>
+
+    <!--photo-->
+    <string name="all_image" translatable="false">所有图片</string>
+    <string name="picture" translatable="false">图片</string>
+    <string name="preview" translatable="false">预览</string>
+    <string name="preview_num" translatable="false">预览(%1$s)</string>
+    <string name="choose" translatable="false">选择</string>
+    <string name="done" translatable="false">完成</string>
+    <string name="done_num" translatable="false">完成(%1$s/%2$s)</string>
+    <string name="num_postfix" translatable="false">%1$s张</string>
+    <string name="message_max_num" translatable="false">你最多可以选择%1$s张图片</string>
+    <string name="pic_file" translatable="false">原图</string>
+    <string name="pic_file_num" translatable="false">原图(%1$s)</string>
+    <string name="back" translatable="false">返回</string>
+    <string name="tackphoto_cancel" translatable="false">取消</string>
+    <string name="tackphoto_tack" translatable="false">拍照</string>
+    <string name="tackphoto_select" translatable="false">从相册选取</string>
+</resources>

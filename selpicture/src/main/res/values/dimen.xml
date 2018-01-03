@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--photo-->
+    <dimen name="btn_radius">2dp</dimen>
+    <dimen name="bar_height">48dp</dimen>
+    <dimen name="btn_height">32dp</dimen>
+    <dimen name="margin_text">8dp</dimen>
+    <dimen name="margin_layout">16dp</dimen>
+    <dimen name="big_image_size">74dp</dimen>
+    <dimen name="middle_text_size">17sp</dimen>
+    <dimen name="small_text_size">15sp</dimen>
+    <dimen name="mini_text_size">13sp</dimen>
+    <dimen name="photo_title_size">21sp</dimen>
+    <dimen name="photo_back_size">16sp</dimen>
+    <dimen name="photo_title_height">45dp</dimen>
+
+   <dimen name="tackphoto_text_size">18sp</dimen>
+    <dimen name="tackphoto_margin_top">2dp</dimen>
+    <dimen name="tackphoto_height">40dp</dimen>
+</resources>

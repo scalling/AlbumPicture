@@ -18,7 +18,8 @@ import com.zm.picture.lib.entity.TContextWrap;
 import com.zm.picture.lib.entity.TResult;
 import com.zm.picture.lib.util.TFileUtils;
 import com.zm.picture.sample.R;
-import com.zm.picture.sample.TConstant;
+import com.zm.picture.sample.mvp.model.entity.ImageParam;
+import com.zm.picture.sample.mvp.presenter.ImagePresenter;
 import com.zm.picture.sample.mvp.ui.activity.ImageSelectorActivity;
 import com.zm.tool.library.util.Logger;
 import com.zm.tool.library.util.ToastUtils;
@@ -34,7 +35,7 @@ import butterknife.OnClick;
  * Created by shake on 2017/8/24.
  */
 
-public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultListener{
+public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultListener {
     private View view;
     @BindView(R.id.btn_camera)
     Button confirmButton;
@@ -44,12 +45,14 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
     protected Activity context;
     private TackPhotoResult tackPhotoResult;
     private TakePhoto takePhoto;
+
     public TackPhotoPopup(Activity context, TackPhotoResult tackPhotoResult) {
         super(context);
         this.context = context;
         this.tackPhotoResult = tackPhotoResult;
         init();
     }
+
     private void init() {
         view = LayoutInflater.from(context).inflate(R.layout.tackphoto_popup, null);
         ButterKnife.bind(this, view);
@@ -57,7 +60,7 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
         setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         setContent(view);
         setOutsideTouchable(true);
-        takePhoto = new TakePhotoImpl(context,this);
+        takePhoto = new TakePhotoImpl(context, this);
         takePhoto.onEnableCompress(null, false);
 
     }
@@ -71,9 +74,9 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
         update();
     }
 
-    @OnClick({R.id.btn_camera,R.id.btn_photo,R.id.root,R.id.btn_cancel})
-    void onClick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.btn_camera, R.id.btn_photo, R.id.root, R.id.btn_cancel})
+    void onClick(View view) {
+        switch (view.getId()) {
             case R.id.btn_camera:
                 camera();
                 break;
@@ -93,6 +96,7 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
                 .setWithOwnCrop(false)
                 .create();
     }
+
     //需要裁剪
     public void showCrap(int outx, int outy) {
         this.enableCrap = true;
@@ -100,6 +104,7 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
         this.outy = outy;
         showAtLocation(confirmButton, Gravity.CENTER, 0, 0);
     }
+
     //不需要裁剪
     public void show() {
         this.enableCrap = false;
@@ -127,6 +132,7 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
 
 
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         takePhoto.onActivityResult(requestCode, resultCode, data);
     }
@@ -134,15 +140,15 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
     @Override
     public void takeSuccess(TResult result) {
         String url = result.getImage().getOriginalPath();
-        Logger.i("得到的图片地址：%s",url);
-        if(tackPhotoResult!=null){
+        Logger.i("得到的图片地址：%s", url);
+        if (tackPhotoResult != null) {
             tackPhotoResult.takeSuccess(url);
         }
     }
 
     @Override
     public void takeFail(TResult result, String msg) {
-        ToastUtils.showToast(context,msg);
+        ToastUtils.showToast(context, msg);
     }
 
 
@@ -153,12 +159,10 @@ public class TackPhotoPopup extends PopupWindow implements TakePhoto.TakeResultL
 
     @Override
     public Intent getPickMultipleIntent(TContextWrap contextWrap, int limit) {
-        Intent intent = new Intent(context, ImageSelectorActivity.class);
-        intent.putExtra(TConstant.IMAGE_MAX, limit);
-        return intent;
+        return ImagePresenter.getOpenIntent(context, ImageSelectorActivity.class, new ImageParam(limit));
     }
 
-    public interface TackPhotoResult{
+    public interface TackPhotoResult {
         void takeSuccess(String path);
     }
 

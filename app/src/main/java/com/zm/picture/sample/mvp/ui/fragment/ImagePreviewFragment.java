@@ -1,5 +1,6 @@
 package com.zm.picture.sample.mvp.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.zm.picture.sample.R;
 import com.zm.picture.sample.mvp.ui.activity.ImagePreviewActivity;
+
+import org.simple.eventbus.EventBus;
 
 import java.io.File;
 
@@ -43,8 +46,7 @@ public class ImagePreviewFragment extends Fragment {
         imageView.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
             @Override
             public void onViewTap(View view, float x, float y) {
-                ImagePreviewActivity activity = (ImagePreviewActivity) getActivity();
-                activity.switchBarVisibility();
+                EventBus.getDefault().post(new Intent(),"onViewTap");
             }
         });
         return contentView;

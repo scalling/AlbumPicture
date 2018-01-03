@@ -13,15 +13,16 @@ import com.zm.tool.library.adapter.BaseRecyclerHolder;
 import com.zm.tool.library.widget.GlideImageLoader;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by dee on 15/11/19.
  */
 public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
-    private ImagePresenter imagePresenter;
-    public ImageListAdapter(Context context, ImagePresenter imagePresenter) {
+    private ImageListInterface imageListInterface;
+    public ImageListAdapter(Context context,ImageListInterface imageListInterface) {
         super(context);
-        this.imagePresenter = imagePresenter;
+        this.imageListInterface = imageListInterface;
     }
     @Override
     public int getLayoutId() {
@@ -34,10 +35,10 @@ public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
         final ImageView picture = holder.getView(R.id.picture);
         final ImageView check = holder.getView(R.id.check);
         GlideImageLoader.create(picture).loadThumbnail(new File(dto.getPath()),  R.drawable.image_placeholder,0.5f);
-        if (!imagePresenter.isMultiple()) {
+        if (!imageListInterface.isMultiple()) {
             check.setVisibility(View.GONE);
         }
-        boolean isChecked =imagePresenter.isSelected(dto);
+        boolean isChecked =imageListInterface.isSelected(dto);
         check.setSelected(isChecked);
         if (isChecked) {
             picture.setColorFilter(mContext.getResources().getColor(R.color.image_overlay2), PorterDuff.Mode.SRC_ATOP);
@@ -47,15 +48,21 @@ public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagePresenter.checkBoxClick(check.isSelected(), dto);
+                imageListInterface.checkBoxClick(check.isSelected(), dto);
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imagePresenter.onItemClick(getDataList(),dto, position,check.isSelected());
+                imageListInterface.onItemClick(getDataList(),dto, position,check.isSelected());
             }
         });
+    }
+    public interface ImageListInterface{
+        void checkBoxClick(boolean isChecked, LocalMedia image);
+        void onItemClick(List<LocalMedia> images, LocalMedia media, int position, boolean isChecked);
+        boolean isSelected(LocalMedia image);
+        boolean isMultiple();
     }
 
 }

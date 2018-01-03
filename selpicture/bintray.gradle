@@ -1,0 +1,17 @@
+apply plugin: 'com.novoda.bintray-release'
+//项目主页
+def siteUrl = 'https://github.com/scalling/AlbumPicture'
+publish {
+    repoName = 'maven'
+    userOrg = 'zmcat'
+    groupId = 'com.zm.selpicture.lib'
+    artifactId = 'selpicture'
+    publishVersion = rootProject.ext.android["versionName"]
+    desc = 'Take pictures, select local pictures, crop reconstruction'
+    website = siteUrl
+}
+tasks.withType(Javadoc) {//防止编码问题
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}

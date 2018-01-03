@@ -6,8 +6,7 @@ package com.zm.picture.sample.mvp.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -22,12 +21,13 @@ import com.zm.picture.sample.mvp.contract.PreviewContract;
 import com.zm.picture.sample.mvp.presenter.PreviewPresenter;
 import com.zm.picture.sample.mvp.ui.adapter.ImagePreviewPagerAdapter;
 import com.zm.picture.sample.mvp.ui.widget.PreviewViewPager;
-import com.zm.tool.library.util.StringUtils;
 import com.zm.tool.library.util.ToastUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnPageChange;
 
 /**
  * Created by shake on 2017/8/30.
@@ -58,28 +58,16 @@ public class ImagePreviewActivity extends BaseMVPAppCompatActivity<PreviewContra
         initView();
     }
     public void initView() {
-        getPresenter().onCreate();
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+        getPresenter().onCreate(this);
+    }
+    @OnPageChange(R.id.preview_pager)
+    public void onPageSelected(int position) {
+        mPresenter.onPageSelected(position);
+    }
 
-            @Override
-            public void onPageSelected(int position) {
-                getPresenter().onPageSelected(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-        checkPic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                getPresenter().setIsOri(b, viewPager.getCurrentItem());
-            }
-        });
-
+    @OnCheckedChanged(R.id.checkbox_pic)
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        mPresenter.setIsOri(b, viewPager.getCurrentItem());
     }
 
     @Override
@@ -89,8 +77,12 @@ public class ImagePreviewActivity extends BaseMVPAppCompatActivity<PreviewContra
     }
 
     @Override
-    public void setOriText(String str) {
-        checkPic.setText(str);
+    public void setOriText(String size) {
+        if (!TextUtils.isEmpty(size)) {
+            checkPic.setText(getString(R.string.pic_file_num, size + ""));
+        } else {
+            checkPic.setText(getString(R.string.pic_file));
+        }
     }
 
 
@@ -109,6 +101,7 @@ public class ImagePreviewActivity extends BaseMVPAppCompatActivity<PreviewContra
     public void isOri(boolean checked) {
         checkPic.setChecked(checked);
     }
+
     @OnClick({R.id.btnBack, R.id.checkbox_select, R.id.tvRests})
     public void onClick(View v) {
         int id = v.getId();
@@ -120,6 +113,7 @@ public class ImagePreviewActivity extends BaseMVPAppCompatActivity<PreviewContra
             getPresenter().onDoneClick(true);
         }
     }
+
     @Override
     public void setDoneText(int size, int maxSelectNum) {
         boolean enable = size != 0;
@@ -130,10 +124,12 @@ public class ImagePreviewActivity extends BaseMVPAppCompatActivity<PreviewContra
             doneText.setText(R.string.done);
         }
     }
+
     @Override
     public void setSelect(boolean checked) {
         checkboxSelect.setChecked(checked);
     }
+
     @Override
     public void hideStatusBar() {
         barLayout.setVisibility(View.GONE);
@@ -168,17 +164,4 @@ public class ImagePreviewActivity extends BaseMVPAppCompatActivity<PreviewContra
         getPresenter().switchBarVisibility();
     }
 
-    @Override
-    public String getOriSizeText(String size) {
-        if (StringUtils.isNotEmpty(size)) {
-            return getString(R.string.pic_file_num, size);
-        } else {
-            return getString(R.string.pic_file);
-        }
-    }
-
-    @Override
-    public AppCompatActivity getActivity() {
-        return this;
-    }
 }

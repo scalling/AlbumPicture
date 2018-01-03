@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 
 public class BaseContract {
     public interface IBaseView {
+
     }
 
     public interface IBaseModel {

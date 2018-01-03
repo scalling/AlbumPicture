@@ -1,15 +1,20 @@
 package com.zm.picture.sample.mvp.presenter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 
 
 import com.zm.picture.lib.entity.LocalMedia;
-import com.zm.picture.sample.TConstant;
 import com.zm.picture.sample.base.BaseMvpPresenter;
 import com.zm.picture.sample.mvp.contract.PreviewContract;
 import com.zm.picture.sample.mvp.model.PreviewModel;
+import com.zm.picture.sample.mvp.model.entity.PreviewParam;
+import com.zm.picture.sample.mvp.model.entity.PreviewResult;
 import com.zm.picture.sample.mvp.ui.adapter.ImagePreviewPagerAdapter;
+
+import org.simple.eventbus.Subscriber;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,25 +24,24 @@ import java.util.List;
  * Created by shake on 2017/8/31.
  */
 
-public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> implements PreviewContract.IPresenter{
+public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> implements PreviewContract.IPresenter {
+
     private int maxSelectNum;
     private List<LocalMedia> images = new ArrayList<>();
     private List<LocalMedia> selectImages = new ArrayList<>();
     private boolean isShowBar = true;
     private boolean isOri = false;
-    private PreviewModel model;
+    private FragmentActivity context;
 
-    public PreviewPresenter(){
-        model = new PreviewModel();
-    }
     @Override
-    public void onCreate() {
-        maxSelectNum = getMvpView().getActivity().getIntent().getIntExtra(TConstant.IMAGE_MAX, TConstant.IMAGE_MAX_SIZE);
-        boolean enablePreview = getMvpView().getActivity().getIntent().getBooleanExtra(TConstant.IMAGE_ENABLE_PREVIEW, false);
-        isOri = getMvpView().getActivity().getIntent().getBooleanExtra(TConstant.IS_ORI, false);
-        images = (List<LocalMedia>) getMvpView().getActivity().getIntent().getSerializableExtra(TConstant.IMAGE_PREVIEW_LIST);
-        selectImages = (List<LocalMedia>) getMvpView().getActivity().getIntent().getSerializableExtra(TConstant.IMAGE_PREVIEW_SELECT_LIST);
-        int position = getMvpView().getActivity().getIntent().getIntExtra(TConstant.IMAGE_PREVIEW_POSITION, 1);
+    public void onCreate(FragmentActivity context) {
+        this.context = context;
+        PreviewParam previewParam = (PreviewParam)context.getIntent().getSerializableExtra(ImagePresenter.PARAM);
+        maxSelectNum = previewParam.getMaxSelectNum();
+        isOri = previewParam.isOri();
+        images = previewParam.getImages();
+        selectImages = previewParam.getSelectImages();
+        int position = previewParam.getPosition();
         getMvpView().setTvTitle((position + 1) + "/" + images.size());
         if (isOri) {
             getMvpView().isOri(true);
@@ -45,10 +49,9 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
             getMvpView().isOri(false);
         }
         onImageSwitch(position);
-        getMvpView().setDoneText(selectImages.size(),maxSelectNum);
-        getMvpView().setAdapter(new ImagePreviewPagerAdapter(getMvpView().getActivity().getSupportFragmentManager(),images),position);
+        getMvpView().setDoneText(selectImages.size(), maxSelectNum);
+        getMvpView().setAdapter(new ImagePreviewPagerAdapter(context.getSupportFragmentManager(), images), position);
     }
-
     @Override
     public void onPageSelected(int position) {
         getMvpView().setTvTitle((position + 1) + "/" + images.size());
@@ -59,16 +62,17 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
         getMvpView().setSelect(isSelected(images.get(position)));
         isOri(position);
     }
+
     private void isOri(int position) {
         if (isOri) {
             File file = new File(images.get(position).getPath());
             if (file.exists() && file.length() > 0) {
-                getMvpView().setOriText(getMvpView().getOriSizeText(model.getFileSize(file.length())));
+                getMvpView().setOriText(getFileSize(file.length()));
             } else {
-                getMvpView().setOriText(getMvpView().getOriSizeText(""));
+                getMvpView().setOriText("");
             }
         } else {
-            getMvpView().setOriText(getMvpView().getOriSizeText(""));
+            getMvpView().setOriText("");
         }
     }
 
@@ -83,13 +87,13 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
     }
 
     @Override
-    public void setIsOri(boolean isOri,int position) {
+    public void setIsOri(boolean isOri, int position) {
         this.isOri = isOri;
         isOri(position);
     }
 
     @Override
-    public void checkClick(boolean isChecked,int position) {
+    public void checkClick(boolean isChecked, int position) {
         if (selectImages.size() >= maxSelectNum && isChecked) {
             getMvpView().selMaxError(maxSelectNum);
             getMvpView().setSelect(false);
@@ -106,7 +110,7 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
                 }
             }
         }
-        getMvpView().setDoneText(selectImages.size(),maxSelectNum);
+        getMvpView().setDoneText(selectImages.size(), maxSelectNum);
     }
 
     @Override
@@ -123,10 +127,39 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
     @Override
     public void onDoneClick(boolean isDone) {
         Intent intent = new Intent();
-        intent.putExtra(TConstant.REQUEST_OUTPUT, (ArrayList)selectImages);
-        intent.putExtra(TConstant.OUTPUT_ISDONE, isDone);
-        intent.putExtra(TConstant.IS_ORI, isOri);
-        getMvpView().getActivity().setResult(Activity.RESULT_OK, intent);
+        intent.putExtra(ImagePresenter.RESULT,new PreviewResult(isDone,isOri,selectImages));
+        context.setResult(Activity.RESULT_OK, intent);
         getMvpView().onFinish();
+    }
+    public String getFileSize(long size) {
+        StringBuilder strSize = new StringBuilder();
+        if (size < 1024) {
+            strSize.append(size).append("B");
+        } else if (size < 1024 * 1024) {
+            strSize.append(size / 1024).append("K");
+        } else {
+            strSize.append(size / 1024 / 1024).append("M");
+        }
+        return strSize.toString();
+    }
+    //直接跳转actiivty
+    public static void open(Activity context, Class<?> cls, PreviewParam param, int requestCode) {
+        context.startActivityForResult(getOpenIntent(context,cls,param),requestCode);
+    }
+    //直接跳转actiivty
+    public static void open(Context context, Class<?> cls, PreviewParam param) {
+        context.startActivity(getOpenIntent(context,cls,param));
+    }
+    //获取需要跳转的参数
+    public static Intent getOpenIntent(Context context, Class<?> cls, PreviewParam param) {
+        Intent intent =new Intent(context,cls);
+        intent.putExtra(ImagePresenter.PARAM,param);
+        return intent;
+    }
+
+    @Subscriber(tag = "onViewTap")
+    private void onViewTap(Intent intent) {
+        if (getMvpView() != null)
+            switchBarVisibility();
     }
 }

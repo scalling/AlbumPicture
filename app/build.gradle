@@ -51,9 +51,10 @@ dependencies {
     annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
         exclude module: 'support-annotations'
     }
-    //图片详情展示
-    compile 'com.commit451:PhotoView:1.2.4'
+
     compile 'com.zm.tool.library:tool_library:1.0.1'
+    implementation rootProject.ext.dependencies["PhotoView"]//图片详情展示
+    implementation rootProject.ext.dependencies["androideventbus"]
     //test
     implementation rootProject.ext.dependencies["logger"]
     testImplementation rootProject.ext.dependencies["junit"]
