@@ -49,6 +49,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements PreviewCo
     @BindView(R.id.rl_title)
     RelativeLayout rlTitle;
     private PreviewPresenter mPresenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +69,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements PreviewCo
     public void initView() {
         mPresenter.onCreate(this);
     }
+
     @OnPageChange(R.id.preview_pager)
     public void onPageSelected(int position) {
         mPresenter.onPageSelected(position);
@@ -77,6 +79,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements PreviewCo
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         mPresenter.setIsOri(b, viewPager.getCurrentItem());
     }
+
     @Override
     public void setAdapter(ImagePreviewPagerAdapter adapter, int selPosition) {
         viewPager.setAdapter(adapter);
@@ -91,6 +94,7 @@ public class ImagePreviewActivity extends AppCompatActivity implements PreviewCo
             checkPic.setText(getString(R.string.pic_file));
         }
     }
+
     @Override
     public void setTvTitle(String title) {
         tvTitle.setText(title);

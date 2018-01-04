@@ -32,6 +32,9 @@
             android:textColor="@color/tackphoto_text_color"
             android:textSize="@dimen/tackphoto_text_size" />
 
+
+
+
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="match_parent"

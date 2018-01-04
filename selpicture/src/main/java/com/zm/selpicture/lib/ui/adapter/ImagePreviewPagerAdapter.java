@@ -10,7 +10,9 @@ import com.zm.selpicture.lib.ui.fragment.ImagePreviewFragment;
 import java.util.List;
 
 /**
- * Created by shake on 2017/8/31.
+ * 内容:图片详情item
+ * 日期:2018/1/1
+ * 创建人:scala
  */
 
 public class ImagePreviewPagerAdapter extends FragmentPagerAdapter {

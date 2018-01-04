@@ -31,9 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by shake on 2017/8/29.
+ * 内容:图片列表P
+ * 日期:2018/1/1
+ * 创建人:scala
  */
-
 public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implements ImageContract.IPresenter, ImageListAdapter.ImageListInterface {
     public final static String PARAM = "param";//请求的参数
     public final static String RESULT = "result";//请求的参数
@@ -52,6 +53,11 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         this.imageAdapter = imageAdapter;
     }
 
+    /**
+     * 初始化传输参数
+     *
+     * @param context
+     */
     @Override
     public void initParams(FragmentActivity context) {
         if (param == null) {
@@ -60,7 +66,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             initPhoto();
             getMvpView().setRestVisibility(param.isMultiple() ? true : false);
             getMvpView().setPreviewVisibility(param.isEnablePreview() ? true : false);
-            if(imageAdapter==null)
+            if (imageAdapter == null)
                 imageAdapter = new ImageListAdapter.Builder().build(context);
             imageAdapter.setImageListInterface(this);
             imageAdapter.setShowCamera(param.isShowCamera());
@@ -69,6 +75,9 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         }
     }
 
+    /**
+     * 加载本地图片数据
+     */
     @Override
     public void loadData(FragmentActivity context) {
 
@@ -91,6 +100,12 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         });
     }
 
+    /**
+     * 当前图片是否选中
+     *
+     * @param image 对比的数据
+     * @return
+     */
     @Override
     public boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
@@ -101,6 +116,9 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         return false;
     }
 
+    /**
+     * 完成选择
+     */
     @Override
     public void onDoneClick() {
         ArrayList<String> images = new ArrayList<>();
@@ -113,6 +131,12 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         getMvpView().onFinish();
     }
 
+    /**
+     * 复选框点击
+     *
+     * @param isChecked 是否勾选
+     * @param image     当前点击的图片
+     */
     @Override
     public void checkBoxClick(boolean isChecked, LocalMedia image) {
 
@@ -137,14 +161,24 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         imageAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 跳转到详情界面
+     */
     @Override
     public void startSelPreview() {
         getMvpView().setPrevieParam(new PreviewParam(param.getMaxSelectNum(), isOri, 0, selectImages, selectImages));
     }
 
+    /**
+     * 图片点击
+     *
+     * @param images   当前选中的文件夹的所有图片
+     * @param media    点击的图片
+     * @param position 图片的位置
+     * @param viewType 点击的item类型
+     */
     @Override
     public void onItemClick(List<LocalMedia> images, LocalMedia media, int position, int viewType) {
-
         if (viewType == ImageListAdapter.TYPE_CAMERA) {
             getMvpView().openCamera();
         } else {
@@ -170,9 +204,13 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             }
         }
     }
+
+    /**
+     * 拍照
+     */
     @Override
     public void clickCamera() {
-        if(takePhoto==null)return;
+        if (takePhoto == null) return;
         File file = TFileUtils.createCameraFile(context);
         Uri fileUri = Uri.fromFile(file);
         if (param.isEnableCrap()) {
@@ -182,6 +220,11 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         }
     }
 
+    /**
+     * 裁剪配置
+     *
+     * @return
+     */
     private CropOptions getCropOptions() {
         return new CropOptions.Builder()
                 .setAspectX(param.getOutx())
@@ -192,12 +235,22 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
                 .create();
     }
 
+    /**
+     * 图片选择
+     */
     private void checkSel() {
         boolean enable = selectImages.size() != 0;
-        getMvpView().checkSel(enable,selectImages.size(),param.getMaxSelectNum());
+        getMvpView().checkSel(enable, selectImages.size(), param.getMaxSelectNum());
         imageAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 后个界面的回调
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -215,7 +268,9 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         }
     }
 
-    //初始化拍照
+    /**
+     * 初始化拍照
+     */
     private void initPhoto() {
         if (param.isShowCamera()) {
             takePhoto = getMvpView().getTakePhoto(new TakePhoto.TakeResultListener() {
@@ -237,7 +292,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
                 public void takeFail(TResult result, String msg) {
                     if (!param.isMultiple())
                         selectImages.clear();
-                    getMvpView().takeFail(result,msg);
+                    getMvpView().takeFail(result, msg);
                 }
 
                 @Override
@@ -258,6 +313,11 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     }
 
 
+    /**
+     * 图片库文件夹弹框
+     *
+     * @return
+     */
     private FolderPopup getFolderPopup() {
         if (folderWindow == null) {
             folderWindow = getMvpView().getFolderPopup();
@@ -274,12 +334,15 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         }
         return folderWindow;
     }
-    //显示选择框
 
-
+    /**
+     * 显示选择图片文件夹弹框
+     *
+     * @param view
+     */
     @Override
     public void showFolderPopup(View view) {
-        if(getFolderPopup()==null)return;
+        if (getFolderPopup() == null) return;
         if (getFolderPopup().isShowing()) {
             getFolderPopup().dismiss();
         } else {
@@ -287,12 +350,23 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         }
     }
 
-    //直接跳转actiivty
+    /**
+     * 直接跳转actiivty
+     *
+     * @param context
+     * @param cls
+     * @param param
+     */
     public static void open(Activity context, Class<?> cls, ImageParam param, int requestCode) {
         context.startActivityForResult(getOpenIntent(context, cls, param), requestCode);
     }
 
-    //获取需要跳转的参数
+    /**
+     * @param context
+     * @param cls     要跳转的activity
+     * @param param   跳转到图片列表请求的参数
+     * @return 返回要跳转的intent
+     */
     public static Intent getOpenIntent(Context context, Class<?> cls, ImageParam param) {
         Intent intent = new Intent(context, cls);
         intent.putExtra(PARAM, param);

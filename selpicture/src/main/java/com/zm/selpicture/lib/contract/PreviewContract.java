@@ -14,30 +14,67 @@ public interface PreviewContract {
     interface IView {
         void setAdapter(ImagePreviewPagerAdapter adapter, int selPosition);
 
-        void setTvTitle(String title); //设置标题
+        /**
+         * 设置标题
+         *
+         * @param title 标题
+         */
+        void setTvTitle(String title);
 
-        void isOri(boolean checked);  //是否是原图
+        /**
+         * 是否是原图
+         *
+         * @param checked
+         */
+        void isOri(boolean checked);
 
-        void setOriText(String size); //原图大小
+        /**
+         * @param size 原图大小
+         */
 
-        void setSelect(boolean checked);//是否选中
+        void setOriText(String size);
 
-        void selMaxError(int maxSelectNum);//最大选中错误
+        /**
+         * @param checked 是否选中
+         */
+        void setSelect(boolean checked);
 
-        void setDoneText(int size, int maxSelectNum);//完成选择
+        /**
+         * 最大选中错误
+         *
+         * @param maxSelectNum 最大图片个数
+         */
+        void selMaxError(int maxSelectNum);
 
-        void hideStatusBar(); //隐藏bar
+        /**
+         * 完成选择
+         *
+         * @param size         当前选中的图片个数
+         * @param maxSelectNum 最大图片个数
+         */
+        void setDoneText(int size, int maxSelectNum);
 
-        void showStatusBar();//显示bar
+        /**
+         * 隐藏bar
+         */
+        void hideStatusBar();
 
-        void onFinish();//关闭当前界面
+        /**
+         * 显示bar
+         */
+        void showStatusBar();
+
+        /**
+         * 关闭当前界面
+         */
+        void onFinish();
     }
 
     interface IPresenter {
         //初始化数据
         void onCreate(FragmentActivity context);
 
-        //数据选中该拜年
+        //数据选中改变
         void onPageSelected(int position);
 
         //设置是否是原图
@@ -45,9 +82,6 @@ public interface PreviewContract {
 
         //设置是否选中
         void checkClick(boolean isCheck, int position);
-
-        //点击是否隐藏bar
-        void switchBarVisibility();
 
         //完成选择
         void onDoneClick(boolean isDone);

@@ -23,13 +23,12 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * Created by dee on 15/11/20.
- * 图片库列表
+ * 内容:图片文件夹列表
+ * 日期:2018/1/1
+ * 创建人:scala
  */
 public class FolderPopup extends PopupWindow {
-    RecyclerView rxList;
-
-
+    private RecyclerView rxList;
     private Context context;
     private View view;
     private ImageFolderAdapter adapter;
@@ -64,7 +63,7 @@ public class FolderPopup extends PopupWindow {
         if (adapter == null)
             adapter = new ImageFolderAdapter.Builder().build(context);
         rxList.addItemDecoration(new ItemDivider());
-        rxList.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
+        rxList.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         rxList.setAdapter(adapter);
     }
 

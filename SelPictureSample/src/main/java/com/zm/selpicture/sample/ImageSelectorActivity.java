@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.zm.picture.lib.TakePhoto;
 import com.zm.picture.lib.TakePhotoImpl;
-import com.zm.picture.lib.entity.LocalMediaFolder;
 import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.PreviewParam;
@@ -27,8 +26,6 @@ import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 import com.zm.selpicture.lib.ui.popup.FolderPopup;
 import com.zm.selpicture.lib.ui.widget.GridSpacingItemDecoration;
 import com.zm.selpicture.lib.util.ScreenUtils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +71,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     private void initView() {
         tvTitle.setText(getString(R.string.picture));
         mPresenter.initParams(this);
+        //授权获取数据
         mPresenter.loadData(this);
     }
 
@@ -84,8 +82,6 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(adapter);
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -113,6 +109,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
 
     @Override
     public void openCamera() {
+        //授权点击拍照
         mPresenter.clickCamera();
     }
 
@@ -140,19 +137,19 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     public void setRestVisibility(boolean flag) {
         tvRests.setVisibility(flag ? View.VISIBLE : View.GONE);
     }
+
     @Override
     public void checkSel(boolean doneEnable, int selSize, int maxSize) {
         tvRests.setEnabled(doneEnable);
         previewText.setEnabled(doneEnable);
-        if (selSize <= 0){
+        if (selSize <= 0) {
             tvRests.setText(getString(R.string.done));
             previewText.setText(getString(R.string.preview));
-        }else{
+        } else {
             tvRests.setText(getString(R.string.done_num, selSize + "", maxSize + ""));
             previewText.setText(getString(R.string.preview_num, selSize + ""));
         }
     }
-
 
     @Override
     public void setPrevieParam(PreviewParam previeParam) {
@@ -167,7 +164,6 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     @Override
     public void takeFail(TResult result, String msg) {
         Toast.makeText(this, "裁剪失败", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override

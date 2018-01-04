@@ -7,9 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.zm.picture.lib.TakePhoto;
+import com.zm.picture.lib.entity.TContextWrap;
+import com.zm.picture.lib.entity.TResult;
 import com.zm.picture.lib.util.TConstant;
 import com.zm.selpicture.lib.entity.ImageParam;
 import com.zm.selpicture.lib.presenter.ImagePresenter;
+import com.zm.selpicture.lib.ui.popup.TackPhotoPopup;
 
 import java.util.ArrayList;
 
@@ -34,12 +38,29 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.tv_tack)
     void click() {
         if (tackPhotoPopup == null)
-            tackPhotoPopup = new TackPhotoPopup(this, new TackPhotoPopup.TackPhotoResult() {
-                @Override
-                public void takeSuccess(String path) {
-                    Toast.makeText(MainActivity.this, path, Toast.LENGTH_SHORT);
-                }
-            });
+            tackPhotoPopup = new TackPhotoPopup.Builder()
+                    .setTackPhotoResult(new TakePhoto.TakeResultListener() {
+                        @Override
+                        public void takeSuccess(TResult result) {
+                            String url = result.getImage().getOriginalPath();
+                            showMsg(url);
+                        }
+
+                        @Override
+                        public void takeFail(TResult result, String msg) {
+                            showMsg("裁剪失败");
+                        }
+
+                        @Override
+                        public void takeCancel() {
+                            showMsg("裁剪取消");
+                        }
+
+                        @Override
+                        public Intent getPickMultipleIntent(TContextWrap contextWrap, int limit) {
+                            return ImagePresenter.getOpenIntent(contextWrap.getActivity(), ImageSelectorActivity.class, new ImageParam(limit));
+                        }
+                    }).build(this);
         isM = false;
         tackPhotoPopup.show();
     }
@@ -47,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_m)
     void btnM() {
         isM = true;
-        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(9, true,true), TConstant.RC_PICK_MULTIPLE);
+        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(9, true, true), TConstant.RC_PICK_MULTIPLE);
     }
 
     @Override
@@ -63,5 +84,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void showMsg(String msg) {
+        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
     }
 }

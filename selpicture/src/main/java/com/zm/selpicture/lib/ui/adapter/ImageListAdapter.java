@@ -17,7 +17,9 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Created by dee on 15/11/19.
+ * 内容:图片item
+ * 日期:2018/1/1
+ * 创建人:scala
  */
 public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
     public static final int TYPE_CAMERA = 1;//拍照
@@ -96,22 +98,12 @@ public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
             } else {
                 picture.setColorFilter(mContext.getResources().getColor(builder.getPicNoCheckedColor()), PorterDuff.Mode.SRC_ATOP);
             }
-            check.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    imageListInterface.checkBoxClick(check.isSelected(), dto);
-                }
-            });
+            check.setOnClickListener(v -> imageListInterface.checkBoxClick(check.isSelected(), dto));
         } else {
             final ImageView ivCamera = holder.getView(builder.getCameraIvId());
             ivCamera.setImageResource(builder.getCameraImageResource());
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                imageListInterface.onItemClick(getDataList(), dto, position, getItemViewType(position));
-            }
-        });
+        holder.itemView.setOnClickListener(v -> imageListInterface.onItemClick(getDataList(), dto, position, getItemViewType(position)));
     }
 
     public interface ImageListInterface {
