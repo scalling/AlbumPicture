@@ -45,16 +45,9 @@ public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
 
     public void setImageListInterface(ImageListInterface imageListInterface) {
         this.imageListInterface = imageListInterface;
+        isMultiple = this.imageListInterface.isMultiple();
+        showCamera = this.imageListInterface.isShowCamera();
     }
-
-    public void setMultiple(boolean multiple) {
-        isMultiple = multiple;
-    }
-
-    public void setShowCamera(boolean showCamera) {
-        this.showCamera = showCamera;
-    }
-
     @Override
     public int getLayoutId() {
         return 0;
@@ -112,6 +105,9 @@ public class ImageListAdapter extends BaseListAdapter<LocalMedia> {
         void onItemClick(List<LocalMedia> images, LocalMedia media, int position, int viewType);
 
         boolean isSelected(LocalMedia image);
+
+        boolean isShowCamera();
+        boolean isMultiple();
     }
 
 

@@ -2,13 +2,17 @@ package com.zm.selpicture.lib.contract;
 
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.zm.picture.lib.TakePhoto;
+import com.zm.picture.lib.entity.LocalMedia;
+import com.zm.picture.lib.entity.LocalMediaFolder;
 import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.entity.PreviewParam;
-import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 import com.zm.selpicture.lib.ui.popup.FolderPopup;
+
+import java.util.List;
 
 /**
  * Created by shake on 2017/8/29.
@@ -52,7 +56,8 @@ public interface ImageContract {
          *
          * @param adapter 图片列表
          */
-        void bindAdapter(ImageListAdapter adapter);
+        void bindAdapter(RecyclerView.Adapter adapter);
+
 
         /**
          * @param doneEnable 当前是否有图片选中
@@ -100,6 +105,18 @@ public interface ImageContract {
          * 点击拍照及请求权限
          */
         void openCamera();
+
+        /**
+         * 设置图片数据
+         * @param datas 图片数据
+         */
+        void setData(List<LocalMedia> datas);//图片数据
+
+        /**
+         * 设置文件夹数据
+         * @param folders 文件夹数据
+         */
+        void setFolder(List<LocalMediaFolder> folders);
     }
 
     interface IPresenter {

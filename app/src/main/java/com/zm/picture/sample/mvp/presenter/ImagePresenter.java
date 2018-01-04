@@ -58,20 +58,23 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             public void loadComplete(List<LocalMediaFolder> folders) {
                 getMvpView().bindFolder(folders);
                 if (folders.size() > 0) {
-                    imageAdapter.addAll(folders.get(0).getImages());
-                    getMvpView().setFolderName(folders.get(0).getName());
+                    selectFolderImages(folders.get(0).getName(),folders.get(0).getImages());
                 } else {
-                    imageAdapter.addAll(new ArrayList<LocalMedia>());
-                    getMvpView().setFolderName(context.getString(R.string.all_image));
+                    selectFolderImages(context.getString(R.string.all_image),new ArrayList<>());
                 }
-                if (param.isShowCamera()) {
-                    imageAdapter.getDataList().add(0, new LocalMedia(""));
-                }
-                imageAdapter.notifyDataSetChanged();
             }
         });
     }
-
+    @Override
+    public void selectFolderImages(String name, List<LocalMedia> images) {
+        getMvpView().setFolderName(name);
+        List<LocalMedia> newData =images;
+        if (param.isShowCamera()) {
+            newData.add(0, new LocalMedia(""));
+        }
+        imageAdapter.setDataList(newData);
+        imageAdapter.notifyDataSetChanged();
+    }
     @Override
     public boolean isSelected(LocalMedia image) {
         for (LocalMedia media : selectImages) {
@@ -118,12 +121,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         imageAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void selectFolderImages(String name, List<LocalMedia> images) {
-        getMvpView().setFolderName(name);
-        imageAdapter.setDataList(images);
-        imageAdapter.notifyDataSetChanged();
-    }
+
 
     @Override
     public void startSelPreview() {

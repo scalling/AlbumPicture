@@ -73,7 +73,8 @@ public class ImageFolderAdapter extends BaseListAdapter<LocalMediaFolder> {
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        if(this.onItemClickListener==null)
+            this.onItemClickListener = onItemClickListener;
     }
 
     public interface OnItemClickListener {

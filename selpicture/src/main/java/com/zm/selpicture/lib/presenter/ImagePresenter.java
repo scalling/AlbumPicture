@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.zm.picture.lib.TakePhoto;
@@ -22,9 +23,7 @@ import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.ImageParam;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.entity.PreviewResult;
-import com.zm.selpicture.lib.ui.adapter.ImageFolderAdapter;
 import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
-import com.zm.selpicture.lib.ui.popup.FolderPopup;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -39,18 +38,14 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     public final static String PARAM = "param";//请求的参数
     public final static String RESULT = "result";//请求的参数
     private boolean isOri = false;//是否压缩
-    private List<LocalMedia> selectImages = new ArrayList<LocalMedia>();
-    private ImageListAdapter imageAdapter;
+    private List<LocalMedia> selectImages = new ArrayList<LocalMedia>();//选中的图片
+    private RecyclerView.Adapter adapter;
     private FragmentActivity context;
-    private ImageParam param;
+    private ImageParam param;//请求的参数
     private TakePhoto takePhoto;
-    private FolderPopup folderWindow;
 
-    public ImagePresenter() {
-    }
-
-    public ImagePresenter(ImageListAdapter imageAdapter) {
-        this.imageAdapter = imageAdapter;
+    public ImagePresenter(RecyclerView.Adapter adapter) {
+        this.adapter = adapter;
     }
 
     /**
@@ -66,14 +61,10 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             initPhoto();
             getMvpView().setRestVisibility(param.isMultiple() ? true : false);
             getMvpView().setPreviewVisibility(param.isEnablePreview() ? true : false);
-            if (imageAdapter == null)
-                imageAdapter = new ImageListAdapter.Builder().build(context);
-            imageAdapter.setImageListInterface(this);
-            imageAdapter.setShowCamera(param.isShowCamera());
-            imageAdapter.setMultiple(param.isMultiple());
-            getMvpView().bindAdapter(imageAdapter);
+            getMvpView().bindAdapter(adapter);
         }
     }
+
 
     /**
      * 加载本地图片数据
@@ -84,20 +75,33 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         new LocalMediaLoader(context, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoader.LocalMediaLoadListener() {
             @Override
             public void loadComplete(List<LocalMediaFolder> folders) {
-                getFolderPopup().bindFolder(folders);
+                getMvpView().setFolder(folders);
+                //设置监听
+                if (getMvpView().getFolderPopup() != null) {
+                    getMvpView().getFolderPopup().setOnItemClickListener((name, images) -> {
+                        getMvpView().getFolderPopup().dismiss();
+                        getMvpView().setFolderName(name);
+                        setListData(name,images);
+                    });
+                }
+                List<LocalMedia> newData = new ArrayList<>();
                 if (folders.size() > 0) {
-                    imageAdapter.addAll(folders.get(0).getImages());
-                    getMvpView().setFolderName(folders.get(0).getName());
+                    setListData(folders.get(0).getName(),folders.get(0).getImages());
                 } else {
-                    imageAdapter.addAll(new ArrayList<LocalMedia>());
                     getMvpView().setFolderName(context.getString(R.string.all_image));
                 }
-                if (param.isShowCamera()) {
-                    imageAdapter.getDataList().add(0, new LocalMedia(""));
-                }
-                imageAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void setListData(String name,List<LocalMedia> data){
+        getMvpView().setFolderName(name);
+        List<LocalMedia> newData =data;
+        if (param.isShowCamera()) {
+            newData.add(0, new LocalMedia(""));
+        }
+        getMvpView().setData(newData);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -158,7 +162,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             selectImages.add(image);
         }
         checkSel();
-        imageAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -220,6 +224,16 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         }
     }
 
+    @Override
+    public boolean isShowCamera() {
+        return param.isShowCamera();
+    }
+
+    @Override
+    public boolean isMultiple() {
+        return param.isMultiple();
+    }
+
     /**
      * 裁剪配置
      *
@@ -241,7 +255,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     private void checkSel() {
         boolean enable = selectImages.size() != 0;
         getMvpView().checkSel(enable, selectImages.size(), param.getMaxSelectNum());
-        imageAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -314,39 +328,17 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
 
 
     /**
-     * 图片库文件夹弹框
-     *
-     * @return
-     */
-    private FolderPopup getFolderPopup() {
-        if (folderWindow == null) {
-            folderWindow = getMvpView().getFolderPopup();
-            folderWindow.setOnItemClickListener(new ImageFolderAdapter.OnItemClickListener() {
-                @Override
-                public void onItemClick(String name, List<LocalMedia> images) {
-                    folderWindow.dismiss();
-                    getMvpView().setFolderName(name);
-                    imageAdapter.setDataList(images);
-                    imageAdapter.notifyDataSetChanged();
-
-                }
-            });
-        }
-        return folderWindow;
-    }
-
-    /**
      * 显示选择图片文件夹弹框
      *
      * @param view
      */
     @Override
     public void showFolderPopup(View view) {
-        if (getFolderPopup() == null) return;
-        if (getFolderPopup().isShowing()) {
-            getFolderPopup().dismiss();
+        if (getMvpView().getFolderPopup() == null) return;
+        if (getMvpView().getFolderPopup().isShowing()) {
+            getMvpView().getFolderPopup().dismiss();
         } else {
-            getFolderPopup().showAsDropDown(view);
+            getMvpView().getFolderPopup().showAsDropDown(view);
         }
     }
 

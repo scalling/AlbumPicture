@@ -17,10 +17,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.selpicture.lib.contract.PreviewContract;
 import com.zm.selpicture.lib.presenter.PreviewPresenter;
 import com.zm.selpicture.lib.ui.adapter.ImagePreviewPagerAdapter;
 import com.zm.selpicture.lib.ui.widget.PreviewViewPager;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,10 +82,9 @@ public class ImagePreviewActivity extends AppCompatActivity implements PreviewCo
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         mPresenter.setIsOri(b, viewPager.getCurrentItem());
     }
-
     @Override
-    public void setAdapter(ImagePreviewPagerAdapter adapter, int selPosition) {
-        viewPager.setAdapter(adapter);
+    public void setData(List<LocalMedia> images, int selPosition) {
+        viewPager.setAdapter(new ImagePreviewPagerAdapter(this.getSupportFragmentManager(), images));
         viewPager.setCurrentItem(selPosition);
     }
 

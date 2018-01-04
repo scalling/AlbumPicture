@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.zm.picture.lib.TakePhoto;
 import com.zm.picture.lib.TakePhotoImpl;
+import com.zm.picture.lib.entity.LocalMedia;
+import com.zm.picture.lib.entity.LocalMediaFolder;
 import com.zm.picture.lib.entity.TResult;
 import com.zm.selpicture.lib.contract.ImageContract;
 import com.zm.selpicture.lib.entity.PreviewParam;
@@ -26,6 +28,9 @@ import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 import com.zm.selpicture.lib.ui.popup.FolderPopup;
 import com.zm.selpicture.lib.ui.widget.GridSpacingItemDecoration;
 import com.zm.selpicture.lib.util.ScreenUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,15 +56,29 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     @BindView(R.id.rl_title)
     RelativeLayout rlTitle;
     private ImagePresenter mPresenter;
+    private ImageListAdapter adapter;
+    private FolderPopup folderPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.image_selector_activity);
         ButterKnife.bind(this);
-        mPresenter = new ImagePresenter();
+        adapter = new ImageListAdapter.Builder().build(this);
+        mPresenter = new ImagePresenter(adapter);
         mPresenter.attachView(this);
+
         initView();
+    }
+
+    @Override
+    public void setData(List<LocalMedia> datas) {
+        adapter.setDataList(datas);
+    }
+
+    @Override
+    public void setFolder(List<LocalMediaFolder> folders) {
+        getFolderPopup().bindFolder(folders);
     }
 
     @Override
@@ -71,15 +90,15 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     private void initView() {
         tvTitle.setText(getString(R.string.picture));
         mPresenter.initParams(this);
-        //授权获取数据
-        mPresenter.loadData(this);
+        mPresenter.loadData(this); //授权获取数据
     }
 
     @Override
-    public void bindAdapter(ImageListAdapter adapter) {
+    public void bindAdapter(RecyclerView.Adapter adapter) {
+        this.adapter.setImageListInterface(mPresenter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, ScreenUtils.dip2px(this, 2), false));
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(4, ScreenUtils.dip2px(this, 2), false));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
         recyclerView.setAdapter(adapter);
     }
 
@@ -120,7 +139,9 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
 
     @Override
     public FolderPopup getFolderPopup() {
-        return new FolderPopup(this);
+        if(folderPopup==null)
+            folderPopup = new FolderPopup(this);
+        return folderPopup;
     }
 
     @Override
@@ -150,7 +171,6 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
             previewText.setText(getString(R.string.preview_num, selSize + ""));
         }
     }
-
     @Override
     public void setPrevieParam(PreviewParam previeParam) {
         PreviewPresenter.open(this, ImagePreviewActivity.class, previeParam, 0);

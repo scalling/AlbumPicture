@@ -2,7 +2,10 @@ package com.zm.selpicture.lib.contract;
 
 import android.support.v4.app.FragmentActivity;
 
+import com.zm.picture.lib.entity.LocalMedia;
 import com.zm.selpicture.lib.ui.adapter.ImagePreviewPagerAdapter;
+
+import java.util.List;
 
 
 /**
@@ -12,8 +15,6 @@ import com.zm.selpicture.lib.ui.adapter.ImagePreviewPagerAdapter;
 
 public interface PreviewContract {
     interface IView {
-        void setAdapter(ImagePreviewPagerAdapter adapter, int selPosition);
-
         /**
          * 设置标题
          *
@@ -68,6 +69,13 @@ public interface PreviewContract {
          * 关闭当前界面
          */
         void onFinish();
+
+        /**
+         * 设置数据
+         * @param images
+         * @param selPosition
+         */
+        void setData(List<LocalMedia> images,int selPosition);
     }
 
     interface IPresenter {
