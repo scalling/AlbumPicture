@@ -21,6 +21,7 @@ import com.zm.selpicture.lib.util.ScreenUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
+
 /**
  * Created by dee on 15/11/20.
  * 图片库列表
@@ -33,7 +34,17 @@ public class FolderPopup extends PopupWindow {
     private View view;
     private ImageFolderAdapter adapter;
     private boolean isDismiss = false;
+
     public FolderPopup(Context context) {
+        create(context);
+    }
+
+    public FolderPopup(Context context, ImageFolderAdapter adapter) {
+        this.adapter = adapter;
+        create(context);
+    }
+
+    private void create(Context context) {
         this.context = context;
         view = LayoutInflater.from(context).inflate(R.layout.folder_popup, null);
         rxList = view.findViewById(R.id.rv_list);
@@ -49,27 +60,32 @@ public class FolderPopup extends PopupWindow {
         setPopupWindowTouchModal(this, false);
     }
 
-    public void initView() {
-        adapter = new ImageFolderAdapter(context);
+    private void initView() {
+        if (adapter == null)
+            adapter = new ImageFolderAdapter.Builder().build(context);
         rxList.addItemDecoration(new ItemDivider());
-        rxList.setLayoutManager(new LinearLayoutManager(context));
+        rxList.setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false));
         rxList.setAdapter(adapter);
     }
-    public void bindFolder(List<LocalMediaFolder> folders){
+
+    public void bindFolder(List<LocalMediaFolder> folders) {
         adapter.bindFolder(folders);
     }
+
     @Override
     public void showAsDropDown(View anchor) {
         super.showAsDropDown(anchor);
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_in);
         rxList.startAnimation(animation);
     }
-    public void setOnItemClickListener(ImageFolderAdapter.OnItemClickListener onItemClickListener){
+
+    public void setOnItemClickListener(ImageFolderAdapter.OnItemClickListener onItemClickListener) {
         adapter.setOnItemClickListener(onItemClickListener);
     }
+
     @Override
     public void dismiss() {
-        if(isDismiss){
+        if (isDismiss) {
             return;
         }
         isDismiss = true;
@@ -87,6 +103,7 @@ public class FolderPopup extends PopupWindow {
                 isDismiss = false;
                 FolderPopup.super.dismiss();
             }
+
             @Override
             public void onAnimationRepeat(Animation animation) {
 
@@ -100,21 +117,24 @@ public class FolderPopup extends PopupWindow {
         }
         Method method;
         try {
-            method = PopupWindow.class.getDeclaredMethod("setTouchModal",boolean.class);
+            method = PopupWindow.class.getDeclaredMethod("setTouchModal", boolean.class);
             method.setAccessible(true);
             method.invoke(popupWindow, touchModal);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public class ItemDivider extends RecyclerView.ItemDecoration {
         private Drawable mDrawable;
+
         public ItemDivider() {
             mDrawable = context.getResources().getDrawable(R.drawable.image_item_divider);
         }
+
         @Override
         public void onDrawOver(Canvas c, RecyclerView parent) {
-            final int left = ScreenUtils.dip2px(parent.getContext(),16);
+            final int left = ScreenUtils.dip2px(parent.getContext(), 16);
             final int right = parent.getWidth() - left;
 
             final int childCount = parent.getChildCount();

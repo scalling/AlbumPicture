@@ -44,21 +44,38 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     private ImageParam param;
     private TakePhoto takePhoto;
     private FolderPopup folderWindow;
+
+    public ImagePresenter() {
+    }
+
+    public ImagePresenter(ImageListAdapter imageAdapter) {
+        this.imageAdapter = imageAdapter;
+    }
+
     @Override
-    public void loadData(FragmentActivity context) {
-        if (imageAdapter == null) {
+    public void initParams(FragmentActivity context) {
+        if (param == null) {
             this.context = context;
             param = (ImageParam) context.getIntent().getSerializableExtra(PARAM);
             initPhoto();
             getMvpView().setRestVisibility(param.isMultiple() ? true : false);
             getMvpView().setPreviewVisibility(param.isEnablePreview() ? true : false);
-            imageAdapter = new ImageListAdapter(context, this, param.isMultiple(), param.isShowCamera());
+            if(imageAdapter==null)
+                imageAdapter = new ImageListAdapter.Builder().build(context);
+            imageAdapter.setImageListInterface(this);
+            imageAdapter.setShowCamera(param.isShowCamera());
+            imageAdapter.setMultiple(param.isMultiple());
             getMvpView().bindAdapter(imageAdapter);
         }
+    }
+
+    @Override
+    public void loadData(FragmentActivity context) {
+
         new LocalMediaLoader(context, LocalMediaLoader.TYPE_IMAGE).loadAllImage(new LocalMediaLoader.LocalMediaLoadListener() {
             @Override
             public void loadComplete(List<LocalMediaFolder> folders) {
-                getMvpView().bindFolder(folders);
+                getFolderPopup().bindFolder(folders);
                 if (folders.size() > 0) {
                     imageAdapter.addAll(folders.get(0).getImages());
                     getMvpView().setFolderName(folders.get(0).getName());
@@ -129,7 +146,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     public void onItemClick(List<LocalMedia> images, LocalMedia media, int position, int viewType) {
 
         if (viewType == ImageListAdapter.TYPE_CAMERA) {
-            clickCamera();
+            getMvpView().openCamera();
         } else {
             boolean isChecked = isSelected(media);
             if (param.isEnablePreview()) {
@@ -153,8 +170,9 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
             }
         }
     }
-
+    @Override
     public void clickCamera() {
+        if(takePhoto==null)return;
         File file = TFileUtils.createCameraFile(context);
         Uri fileUri = Uri.fromFile(file);
         if (param.isEnableCrap()) {
@@ -176,9 +194,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
 
     private void checkSel() {
         boolean enable = selectImages.size() != 0;
-        getMvpView().setSelEnable(enable);
-        getMvpView().setPreviewText(selectImages.size());
-        getMvpView().setTvRestText(selectImages.size(), param.getMaxSelectNum());
+        getMvpView().checkSel(enable,selectImages.size(),param.getMaxSelectNum());
         imageAdapter.notifyDataSetChanged();
     }
 
@@ -263,6 +279,7 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
 
     @Override
     public void showFolderPopup(View view) {
+        if(getFolderPopup()==null)return;
         if (getFolderPopup().isShowing()) {
             getFolderPopup().dismiss();
         } else {

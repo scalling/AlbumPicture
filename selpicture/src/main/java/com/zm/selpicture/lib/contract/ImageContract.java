@@ -21,7 +21,6 @@ import java.util.List;
 
 public interface ImageContract {
     interface IView {
-        void bindFolder(List<LocalMediaFolder> folders);//图片类型列表
 
         void onFinish();//返回信息 关闭当前activity 反出数据 选中的多个图片
 
@@ -33,13 +32,14 @@ public interface ImageContract {
 
         void setPreviewVisibility(boolean flag);//是否显示预览
 
-        void setSelEnable(boolean enable);//完成按钮预览按钮是否可用
-
-        void bindAdapter(ImageListAdapter adapter);
-
-        void setTvRestText(int size, int maxSelectNum);//当前选中图片图少个
-
-        void setPreviewText(int size);//当前图片文件夹图片个数
+        void bindAdapter(ImageListAdapter adapter);//绑定adapter
+        /**
+         *
+         * @param doneEnable  当前是否有图片选中
+         * @param selSize 当前选中图片图少个
+         * @param maxSize 最大选择的图片个数
+         */
+        void checkSel(boolean doneEnable,int selSize,int maxSize);
 
         void setPrevieParam(PreviewParam previeParam);//activity跳转
 
@@ -50,9 +50,12 @@ public interface ImageContract {
         void takeCancel();//裁剪取消
 
         FolderPopup getFolderPopup();//初始化弹框
+
+        void openCamera();//打开相机及权限
     }
 
     interface IPresenter {
+        void initParams(FragmentActivity context);
         void loadData(FragmentActivity context); //获取所有本地图片地址
 
         void onDoneClick();//完成选择
@@ -62,5 +65,9 @@ public interface ImageContract {
         void onActivityResult(int requestCode, int resultCode, Intent data);//回调
 
         void showFolderPopup(View view);//显示弹框
+
+        void clickCamera();//点击拍照
+
+
     }
 }

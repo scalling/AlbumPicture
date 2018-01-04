@@ -73,6 +73,7 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
 
     private void initView() {
         tvTitle.setText(getString(R.string.picture));
+        mPresenter.initParams(this);
         mPresenter.loadData(this);
     }
 
@@ -83,6 +84,8 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         recyclerView.setAdapter(adapter);
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -104,15 +107,14 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     }
 
     @Override
-    public void bindFolder(List<LocalMediaFolder> folders) {
-        getFolderPopup().bindFolder(folders);
-    }
-
-    @Override
     public void setFolderName(String name) {
         folderName.setText(name);
     }
 
+    @Override
+    public void openCamera() {
+        mPresenter.clickCamera();
+    }
 
     @Override
     public void onFinish() {
@@ -138,22 +140,19 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     public void setRestVisibility(boolean flag) {
         tvRests.setVisibility(flag ? View.VISIBLE : View.GONE);
     }
-
     @Override
-    public void setTvRestText(int size, int maxSelectNum) {
-        if (size <= 0)
+    public void checkSel(boolean doneEnable, int selSize, int maxSize) {
+        tvRests.setEnabled(doneEnable);
+        previewText.setEnabled(doneEnable);
+        if (selSize <= 0){
             tvRests.setText(getString(R.string.done));
-        else
-            tvRests.setText(getString(R.string.done_num, size + "", maxSelectNum + ""));
+            previewText.setText(getString(R.string.preview));
+        }else{
+            tvRests.setText(getString(R.string.done_num, selSize + "", maxSize + ""));
+            previewText.setText(getString(R.string.preview_num, selSize + ""));
+        }
     }
 
-    @Override
-    public void setPreviewText(int size) {
-        if (size <= 0)
-            previewText.setText(getString(R.string.preview));
-        else
-            previewText.setText(getString(R.string.preview_num, size + ""));
-    }
 
     @Override
     public void setPrevieParam(PreviewParam previeParam) {
@@ -174,11 +173,5 @@ public class ImageSelectorActivity extends AppCompatActivity implements ImageCon
     @Override
     public void takeCancel() {
         Toast.makeText(this, "裁剪取消", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void setSelEnable(boolean enable) {
-        tvRests.setEnabled(enable);
-        previewText.setEnabled(enable);
     }
 }

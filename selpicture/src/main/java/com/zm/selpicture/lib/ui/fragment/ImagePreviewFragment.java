@@ -24,7 +24,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ImagePreviewFragment extends Fragment {
     public static final String PATH = "path";
-
     public static ImagePreviewFragment getInstance(String path) {
         ImagePreviewFragment fragment = new ImagePreviewFragment();
         Bundle bundle = new Bundle();
@@ -32,7 +31,6 @@ public class ImagePreviewFragment extends Fragment {
         fragment.setArguments(bundle);
         return fragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,8 +44,6 @@ public class ImagePreviewFragment extends Fragment {
             @Override
             public void onViewTap(View view, float x, float y) {
                 EventBus.getDefault().post(new Intent(),"onViewTap");
-//                ImagePreviewActivity activity = (ImagePreviewActivity) getActivity();
-//                activity.switchBarVisibility();
             }
         });
         return contentView;

@@ -10,6 +10,7 @@ import com.zm.selpicture.lib.contract.PreviewContract;
 import com.zm.selpicture.lib.entity.ImageParam;
 import com.zm.selpicture.lib.entity.PreviewParam;
 import com.zm.selpicture.lib.entity.PreviewResult;
+import com.zm.selpicture.lib.ui.adapter.ImageListAdapter;
 import com.zm.selpicture.lib.ui.adapter.ImagePreviewPagerAdapter;
 
 import org.simple.eventbus.Subscriber;
@@ -29,6 +30,14 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
     private boolean isShowBar = true;
     private boolean isOri = false;
     private FragmentActivity context;
+    private ImagePreviewPagerAdapter adapter;
+
+    public PreviewPresenter() {
+    }
+
+    public PreviewPresenter(ImagePreviewPagerAdapter adapter) {
+        this.adapter = adapter;
+    }
 
     @Override
     public void onCreate(FragmentActivity context) {
@@ -43,7 +52,9 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
         getMvpView().isOri(isOri);
         onImageSwitch(position);
         getMvpView().setDoneText(selectImages.size(), maxSelectNum);
-        getMvpView().setAdapter(new ImagePreviewPagerAdapter(context.getSupportFragmentManager(), images), position);
+        if(adapter==null)
+            adapter=new ImagePreviewPagerAdapter(context.getSupportFragmentManager(), images);
+        getMvpView().setAdapter(adapter, position);
     }
     @Override
     public void onPageSelected(int position) {

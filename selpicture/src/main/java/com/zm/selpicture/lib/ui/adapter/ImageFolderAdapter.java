@@ -21,54 +21,137 @@ import java.util.List;
  */
 public class ImageFolderAdapter extends BaseListAdapter<LocalMediaFolder> {
     private int checkedIndex = 0;
+    private Builder builder;
 
     private OnItemClickListener onItemClickListener;
-    public ImageFolderAdapter(Context context) {
+
+    private ImageFolderAdapter(Context context,Builder builder) {
         super(context);
+        this.builder = builder;
+    }
+
+    public void setCheckedIndex(int checkedIndex) {
+        this.checkedIndex = checkedIndex;
     }
 
     @Override
     public int getLayoutId() {
-        return R.layout.folder_popup_adapter;
+        return builder.getLayoutId();
     }
+
     @Override
     public void onBindItemHolder(BaseRecyclerHolder holder, final int position) {
-        ImageView firstImage =holder.getView(R.id.first_image);
-        TextView folderName = holder.getView(R.id.folder_name);
-        TextView imageNum = holder.getView(R.id.image_num);
-        ImageView isSelected = holder.getView(R.id.is_selected);
+        ImageView ivFolderPic= holder.getView(builder.getIvFolderPicId());
+        TextView tvFolderName = holder.getView(builder.getTvFolderNameId());
+        TextView tvFolderNum = holder.getView(builder.getTvFolderNumId());
+        ImageView ivChecked = holder.getView(builder.getIvCheckedId());
 
         final LocalMediaFolder folder = getDataList().get(position);
         RequestOptions options = new RequestOptions();
         options.centerCrop();
-        options.placeholder(R.drawable.ic_placeholder);
+        options.placeholder(builder.getImageResource());
         options.diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(mContext).applyDefaultRequestOptions(options).load(new File(folder.getFirstImagePath()))
-                .transition(DrawableTransitionOptions.withCrossFade()).thumbnail(0.5f).into(firstImage);
-       folderName.setText(folder.getName());
-       imageNum.setText(mContext.getString(R.string.num_postfix,folder.getImageNum()+""));
-
-       isSelected.setVisibility(checkedIndex == position ? View.VISIBLE : View.GONE);
-
-       holder.itemView.setOnClickListener(new View.OnClickListener() {
+                .transition(DrawableTransitionOptions.withCrossFade()).thumbnail(0.5f).into(ivFolderPic);
+        tvFolderName.setText(folder.getName());
+        tvFolderNum.setText(mContext.getString(R.string.num_postfix, folder.getImageNum() + ""));
+        ivChecked.setVisibility(checkedIndex == position ? View.VISIBLE : View.GONE);
+        ivChecked.setImageResource(builder.getSelectedImageResource());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
                     checkedIndex = position;
                     notifyDataSetChanged();
-                    onItemClickListener.onItemClick(folder.getName(),folder.getImages());
+                    onItemClickListener.onItemClick(folder.getName(), folder.getImages());
                 }
             }
         });
     }
-    public void bindFolder(List<LocalMediaFolder> folders){
+
+    public void bindFolder(List<LocalMediaFolder> folders) {
         setDataList(folders);
         notifyDataSetChanged();
     }
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
-    public interface OnItemClickListener{
+
+    public interface OnItemClickListener {
         void onItemClick(String folderName, List<LocalMedia> images);
+    }
+
+
+    /**
+     * 配置文件
+     */
+    public static final class Builder {
+
+        int layoutId =R.layout.folder_popup_adapter;//布局文件
+        int imageResource = R.drawable.ic_placeholder;//图片默认图片
+        int selectedImageResource=R.drawable.folder_radio;//选中的图片
+
+        //view
+        int ivFolderPicId=R.id.first_image;//文件夹的图片id 必须是imageView
+        int tvFolderNameId=R.id.folder_name;//文件夹的名称Id 必须是TextView
+        int tvFolderNumId=R.id.image_num;//文件夹内文件的数量id 必须是TextView
+        int ivCheckedId=R.id.is_selected;//单选框 必须是imageView
+
+        public Builder setLayoutId(int layoutId) {
+            this.layoutId = layoutId;
+            return this;
+        }
+        public Builder setLayoutId(int layoutId,int ivFolderPicId,int tvFolderNameId,int tvFolderNumId,int ivCheckedId) {
+            this.layoutId = layoutId;
+            this.ivFolderPicId = ivFolderPicId;
+            this.tvFolderNameId = tvFolderNameId;
+            this.tvFolderNumId = tvFolderNumId;
+            this.ivCheckedId = ivCheckedId;
+            return this;
+        }
+
+        public Builder setImageResource(int imageResource) {
+            this.imageResource = imageResource;
+            return this;
+        }
+
+        public Builder setSelectedImageResource(int selectedImageResource) {
+            this.selectedImageResource = selectedImageResource;
+            return this;
+        }
+
+        public int getIvFolderPicId() {
+            return ivFolderPicId;
+        }
+
+        public int getTvFolderNameId() {
+            return tvFolderNameId;
+        }
+
+        public int getTvFolderNumId() {
+            return tvFolderNumId;
+        }
+
+        public int getIvCheckedId() {
+            return ivCheckedId;
+        }
+
+        public int getLayoutId() {
+            return layoutId;
+        }
+
+        public int getImageResource() {
+            return imageResource;
+        }
+
+        public int getSelectedImageResource() {
+            return selectedImageResource;
+        }
+
+        public ImageFolderAdapter build(Context context) {
+            return new ImageFolderAdapter(context, this);
+        }
+
     }
 }
