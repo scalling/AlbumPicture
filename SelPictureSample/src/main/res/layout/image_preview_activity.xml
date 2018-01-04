@@ -14,71 +14,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <RelativeLayout
-            android:id="@+id/rl_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/bar_grey_90">
-            <!-- 标题layout -->
-            <LinearLayout
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/photo_title_height"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp">
-
-                <ImageView
-                    android:id="@+id/titleback_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@null"/>
-
-                <TextView
-                    android:id="@+id/titleback_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="5dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/back"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/photo_back_size" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/mTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/photo_title_height"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/photo_title_size" />
-
-            <TextView
-                android:id="@+id/tvRests"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/btn_height"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:layout_gravity="right"
-                android:layout_marginRight="@dimen/margin_text"
-                android:background="@drawable/image_selector_btn"
-                android:enabled="false"
-                android:gravity="center"
-                android:text="@string/done"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/small_text_size" />
-
-        </RelativeLayout>
+        <include layout="@layout/view_title_image" />
     </LinearLayout>
-
 
     <RelativeLayout
         android:id="@+id/select_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bar_height"
         android:layout_gravity="bottom"
+        android:clickable="true"
         android:background="@color/bar_grey_90"
         android:gravity="center_vertical">
 

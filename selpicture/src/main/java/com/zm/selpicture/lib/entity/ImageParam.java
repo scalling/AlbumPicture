@@ -114,7 +114,7 @@ public class ImageParam implements Serializable {
 
     public void setMaxSelectNum(int maxSelectNum) {
         this.maxSelectNum = maxSelectNum;
-        if(this.maxSelectNum>0)
+        if(this.maxSelectNum>1)
             multiple=true;
         else
             multiple=false;

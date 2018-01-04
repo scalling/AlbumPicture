@@ -223,7 +223,6 @@ public class PreviewPresenter extends BaseMvpPresenter<PreviewContract.IView> im
 
     @Subscriber(tag = "onViewTap")
     private void onViewTap(Intent intent) {
-        Log.e("onViewTap", isShowBar + "============================");
         if (getMvpView() != null)
             switchBarVisibility();
     }

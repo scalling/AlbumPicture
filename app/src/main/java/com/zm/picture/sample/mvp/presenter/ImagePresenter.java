@@ -68,7 +68,8 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
     @Override
     public void selectFolderImages(String name, List<LocalMedia> images) {
         getMvpView().setFolderName(name);
-        List<LocalMedia> newData =images;
+        List<LocalMedia> newData =new ArrayList<>();
+        newData.addAll(images);
         if (param.isShowCamera()) {
             newData.add(0, new LocalMedia(""));
         }

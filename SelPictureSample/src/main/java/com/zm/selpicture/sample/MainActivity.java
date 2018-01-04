@@ -68,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_m)
     void btnM() {
         isM = true;
-        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(9, true, true), TConstant.RC_PICK_MULTIPLE);
+        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(2, true, true), TConstant.RC_PICK_MULTIPLE);
+    }
+    @OnClick(R.id.btn_no_camera)
+    void noCamera() {
+        isM = true;
+        ImagePresenter.open(this, ImageSelectorActivity.class, new ImageParam(2, true, false), TConstant.RC_PICK_MULTIPLE);
     }
 
     @Override

@@ -1,15 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center">
-    <Button android:id="@+id/tv_tack"
+    android:gravity="center"
+    android:padding="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.zm.selpicture.sample.RoundButton
+        android:id="@+id/tv_tack"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="点击拍照" />
-    <Button android:id="@+id/btn_m"
+        android:layout_height="50dp"
+        app:btnCornerRadius="50dp"
+        app:btnSolidColor="@color/colorAccent"
+        android:clickable="true"
+        android:text="点击拍照"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        app:btnPressedRatio="0.5"/>
+
+    <com.zm.selpicture.sample.RoundButton
+        android:id="@+id/btn_m"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="图片多选" />
+        android:layout_height="50dp"
+        app:btnCornerRadius="50dp"
+        app:btnSolidColor="@color/colorAccent"
+        android:clickable="true"
+        android:layout_marginTop="30dp"
+        android:text="图片多选"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        app:btnPressedRatio="0.5"/>
+
+    <com.zm.selpicture.sample.RoundButton
+        android:id="@+id/btn_no_camera"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:btnCornerRadius="50dp"
+        app:btnSolidColor="@color/colorAccent"
+        android:clickable="true"
+        android:layout_marginTop="30dp"
+        android:text="图片多选没有相机"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        app:btnPressedRatio="0.5"/>
 </LinearLayout>

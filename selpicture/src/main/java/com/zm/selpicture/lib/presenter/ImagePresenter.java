@@ -84,7 +84,6 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
                         setListData(name,images);
                     });
                 }
-                List<LocalMedia> newData = new ArrayList<>();
                 if (folders.size() > 0) {
                     setListData(folders.get(0).getName(),folders.get(0).getImages());
                 } else {
@@ -96,7 +95,8 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
 
     private void setListData(String name,List<LocalMedia> data){
         getMvpView().setFolderName(name);
-        List<LocalMedia> newData =data;
+        List<LocalMedia> newData =new ArrayList<>();
+        newData.addAll(data);
         if (param.isShowCamera()) {
             newData.add(0, new LocalMedia(""));
         }
@@ -364,5 +364,6 @@ public class ImagePresenter extends BaseMvpPresenter<ImageContract.IView> implem
         intent.putExtra(PARAM, param);
         return intent;
     }
+
 
 }
