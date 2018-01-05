@@ -73,5 +73,6 @@ dependencies {
     implementation rootProject.ext.dependencies["logger"]
     testImplementation rootProject.ext.dependencies["junit"]
     compile project(':AlbumPic')
+    testImplementation rootProject.ext.dependencies["junit"]
 }
 apply from: 'bintray.gradle'

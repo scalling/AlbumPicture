@@ -51,4 +51,5 @@ dependencies {
         exclude module: 'support-annotations'
     }
     implementation project(':AlbumPicUpgrade')
+    testImplementation rootProject.ext.dependencies["junit"]
 }
