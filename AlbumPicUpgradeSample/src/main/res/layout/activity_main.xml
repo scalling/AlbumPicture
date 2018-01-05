@@ -4,43 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:padding="20dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <com.zm.selpicture.sample.RoundButton
+    android:padding="20dp">
+    <Button
         android:id="@+id/tv_tack"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:btnCornerRadius="50dp"
-        app:btnSolidColor="@color/colorAccent"
         android:clickable="true"
         android:text="点击拍照"
         android:textColor="@android:color/white"
-        android:textSize="17sp"
-        app:btnPressedRatio="0.5"/>
+        android:textSize="17sp"/>
 
-    <com.zm.selpicture.sample.RoundButton
+    <Button
         android:id="@+id/btn_m"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:btnCornerRadius="50dp"
-        app:btnSolidColor="@color/colorAccent"
         android:clickable="true"
         android:layout_marginTop="30dp"
         android:text="图片多选"
         android:textColor="@android:color/white"
-        android:textSize="17sp"
-        app:btnPressedRatio="0.5"/>
+        android:textSize="17sp"/>
 
-    <com.zm.selpicture.sample.RoundButton
+    <Button
         android:id="@+id/btn_no_camera"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        app:btnCornerRadius="50dp"
-        app:btnSolidColor="@color/colorAccent"
         android:clickable="true"
         android:layout_marginTop="30dp"
         android:text="图片多选没有相机"
         android:textColor="@android:color/white"
-        android:textSize="17sp"
-        app:btnPressedRatio="0.5"/>
+        android:textSize="17sp"/>
 </LinearLayout>
