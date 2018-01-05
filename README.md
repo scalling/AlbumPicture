@@ -7,14 +7,14 @@
 * Gradle 
    
    ```
-    compile 'com.zm.picture.lib:album_picture:1.0.0'
+    compile 'com.github.scalling:albumpic:1.0.0'
    ```
 * Maven
 	
 	```
     <dependency>
-      <groupId>com.zm.picture.lib</groupId>
-      <artifactId>album_picture</artifactId>
+      <groupId>com.github.scalling</groupId>
+      <artifactId>albumpic</artifactId>
       <version>1.0.0</version>
       <type>pom</type>
     </dependency>
@@ -41,7 +41,7 @@
      
         
 ## 具体用法请查看DEMO
->[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/app/src/main/java/com/zm/picture/sample/MainActivity.java)
+>[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/AlbumPicSample/src/main/java/com/zm/picture/sample/MainActivity.java)
     
 #AlbumPicUpgrade二次封装  
 ##介绍 
@@ -51,14 +51,14 @@
 * Gradle 
    
    ```
-    compile 'com.zm.selpicture.lib:selpicture:1.0.0'
+    compile 'com.github.scalling:albumpic_upgrade:1.0.0'
    ```
 * Maven
 	
 	```
     <dependency>
-      <groupId>com.zm.selpicture.lib</groupId>
-      <artifactId>selpicture</artifactId>
+      <groupId>com.github.scalling</groupId>
+      <artifactId>albumpic_upgrade</artifactId>
       <version>1.0.0</version>
       <type>pom</type>
     </dependency>
@@ -82,5 +82,5 @@
      
         
 ## 具体用法请查看DEMO
->[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/SelPictureSample/src/main/java/com/zm/selpicture/sample/MainActivity.java)
+>[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/AlbumPicUpgradeSample/src/main/java/com/zm/selpicture/sample/MainActivity.java)
     
