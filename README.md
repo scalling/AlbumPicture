@@ -36,8 +36,8 @@
      
 >如果你的项目中启用了代码混淆，可在混淆规则文件(如：proguard-rules.pro)中添加如下代码：
      
-    -keep class com.zm.picture.lib.** { *; }
-    -dontwarn com.zm.picture.lib.**
+    -keep class com.zm.albumpic.** { *; }
+    -dontwarn com.zm.albumpic.**
      
         
 ## 具体用法请查看DEMO
@@ -79,8 +79,13 @@
       <uses-permission android:name="android.permission.CAMERA" /><!--打开摄像头-->
 
 
+#### 代码混淆
      
-        
+>如果你的项目中启用了代码混淆，可在混淆规则文件(如：proguard-rules.pro)中添加如下代码：
+     
+    -keep class com.zm.albumpic.upgrade.** { *; }
+    -dontwarn com.zm.albumpic.upgrade.**
+    
 ## 具体用法请查看DEMO
 >[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/AlbumPicUpgradeSample/src/main/java/com/zm/selpicture/sample/MainActivity.java)
     
