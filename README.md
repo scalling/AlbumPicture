@@ -1,3 +1,4 @@
+#AlbumPic
 ##介绍
 >拍照、裁剪、获取本地图片数据(适配7.0)
 
@@ -42,9 +43,8 @@
 ## 具体用法请查看DEMO
 >[MainActivity](https://github.com/scalling/AlbumPicture/blob/master/app/src/main/java/com/zm/picture/sample/MainActivity.java)
     
-       
-#二次封装
-##介绍
+#AlbumPicUpgrade二次封装  
+##介绍 
 >为了调用方便化,在上面的功能上面进行了二次封装，主要实现本地图片列表展示、详情预览
 
 ## 引入

@@ -8,10 +8,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/SelPictureSample" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/library" />
-            <option value="$PROJECT_DIR$/selpicture" />
+            <option value="$PROJECT_DIR$/AlbumPic" />
+            <option value="$PROJECT_DIR$/AlbumPicSample" />
+            <option value="$PROJECT_DIR$/AlbumPicUpgrade" />
+            <option value="$PROJECT_DIR$/AlbumPicUpgradeSample" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/AlbumPic/AlbumPic.iml" filepath="$PROJECT_DIR$/AlbumPic/AlbumPic.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AlbumPicSample/AlbumPicSample.iml" filepath="$PROJECT_DIR$/AlbumPicSample/AlbumPicSample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AlbumPicUpgrade/AlbumPicUpgrade.iml" filepath="$PROJECT_DIR$/AlbumPicUpgrade/AlbumPicUpgrade.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AlbumPicUpgradeSample/AlbumPicUpgradeSample.iml" filepath="$PROJECT_DIR$/AlbumPicUpgradeSample/AlbumPicUpgradeSample.iml" />
       <module fileurl="file://$PROJECT_DIR$/AlbumPicture.iml" filepath="$PROJECT_DIR$/AlbumPicture.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SelPictureSample/SelPictureSample.iml" filepath="$PROJECT_DIR$/SelPictureSample/SelPictureSample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
-      <module fileurl="file://$PROJECT_DIR$/selpicture/selpicture.iml" filepath="$PROJECT_DIR$/selpicture/selpicture.iml" />
+      <module fileurl="file://F:\work\github\AlbumPicture\AlbumPicUpgradeSample\SelPictureSample.iml" filepath="F:\work\github\AlbumPicture\AlbumPicUpgradeSample\SelPictureSample.iml" />
+      <module fileurl="file://F:\work\github\AlbumPicture\AlbumPicSample\app.iml" filepath="F:\work\github\AlbumPicture\AlbumPicSample\app.iml" />
     </modules>
   </component>
 </project>

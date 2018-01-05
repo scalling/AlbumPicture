@@ -1,1 +1,1 @@
-include ':app', ':library', ':selpicture', ':SelPictureSample'
+include ':AlbumPicSample', ':AlbumPicUpgradeSample', ':AlbumPicUpgrade', ':AlbumPic'
